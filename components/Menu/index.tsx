@@ -1,11 +1,13 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 import * as RootNavigation from "../../RootNavigation";
+import { windowContext } from "../pages/Dashboard";
 
 export function MainMenu(props: {
   setVisible: (arg0: boolean) => void;
   visible: any;
 }) {
+  const { setWindowContent } = useContext(windowContext);
   return (
     <View style={styles.container}>
       <View style={styles.menu}>
@@ -20,15 +22,15 @@ export function MainMenu(props: {
       <TouchableOpacity
         onPress={() => {
           props.setVisible(false);
-          RootNavigation.navigate("Dashboard", {});
+          setWindowContent("MyCourses");
         }}
       >
-        <Text style={styles.text}>Dashborad</Text>
+        <Text style={styles.text}>My Courses</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
           props.setVisible(false);
-          RootNavigation.navigate("Create", {});
+          setWindowContent("Create");
         }}
       >
         <Text style={styles.text}>Create</Text>
@@ -36,7 +38,7 @@ export function MainMenu(props: {
       <TouchableOpacity
         onPress={() => {
           props.setVisible(false);
-          RootNavigation.navigate("Files", {});
+          setWindowContent("Files");
         }}
       >
         <Text style={styles.text}>Files</Text>
@@ -44,7 +46,7 @@ export function MainMenu(props: {
       <TouchableOpacity
         onPress={() => {
           props.setVisible(false);
-          RootNavigation.navigate("Find", {});
+          setWindowContent("Find");
         }}
       >
         <Text style={styles.text}>Find</Text>
@@ -52,7 +54,7 @@ export function MainMenu(props: {
       <TouchableOpacity
         onPress={() => {
           props.setVisible(false);
-          RootNavigation.navigate("Notes", {});
+          setWindowContent("Notes");
         }}
       >
         <Text style={styles.text}>Notes</Text>
@@ -60,7 +62,7 @@ export function MainMenu(props: {
       <TouchableOpacity
         onPress={() => {
           props.setVisible(false);
-          RootNavigation.navigate("Settings", {});
+          setWindowContent("Settings");
         }}
       >
         <Text style={styles.text}>Settings</Text>

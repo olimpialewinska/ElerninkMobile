@@ -1,15 +1,38 @@
-import { useState } from "react";
 import { Text, StyleSheet, View, SafeAreaView } from "react-native";
 
 import { Navbar } from "../../Navbar";
+import { createContext, useState } from "react";
+import { MyCourses } from "./MyCourses";
+import { Find } from "./Find";
+import { Notes } from "./Notes";
+import { Create } from "./Create";
+import { Files } from "./Files";
+import { Settings } from "./Settings";
+
+interface contextInterface {
+  windowContent: string;
+  setWindowContent: (value: string) => void;
+}
+
+export const windowContext = createContext<contextInterface>(
+  {} as contextInterface
+);
 
 export function Dashboard() {
+  const [windowContent, setWindowContent] = useState("MyCourses");
   return (
     <>
-      <Navbar />
+      <windowContext.Provider value={{ windowContent, setWindowContent }}>
+        <Navbar />
+      </windowContext.Provider>
       <View style={styles.container}>
         <View>
-          <Text>Dashboard</Text>
+          {windowContent === "MyCourses" ? <MyCourses /> : <></>}
+          {windowContent === "Find" ? <Find /> : <></>}
+          {windowContent === "Notes" ? <Notes /> : <></>}
+          {windowContent === "Create" ? <Create /> : <></>}
+          {windowContent === "Files" ? <Files /> : <></>}
+          {windowContent === "Settings" ? <Settings /> : <></>}
         </View>
       </View>
     </>

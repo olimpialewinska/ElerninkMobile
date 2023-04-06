@@ -7,11 +7,11 @@ import { Register } from "./components/pages/Register";
 import * as RootNavigation from "./RootNavigation";
 import { Start } from "./components/pages/Start";
 import { Dashboard } from "./components/pages/Dashboard";
-import { Create } from "./components/pages/Create";
-import { Files } from "./components/pages/Files";
-import { Find } from "./components/pages/Find";
-import { Notes } from "./components/pages/Notes";
-import { Settings } from "./components/pages/Settings";
+import { Create } from "./components/pages/Dashboard/Create";
+import { Files } from "./components/pages/Dashboard/Files";
+import { Find } from "./components/pages/Dashboard/Find";
+import { Notes } from "./components/pages/Dashboard/Notes";
+import { Settings } from "./components/pages/Dashboard/Settings";
 
 const Stack = createNativeStackNavigator();
 
