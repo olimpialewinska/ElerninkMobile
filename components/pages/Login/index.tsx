@@ -1,5 +1,5 @@
 import { NavigationContainer } from "@react-navigation/native";
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import {
   Button,
   SafeAreaView,
@@ -11,7 +11,15 @@ import {
 import * as RootNavigation from "../../../RootNavigation";
 
 export function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   const handleLogin = useCallback(() => {
+    // if (email === "" || password === "") {
+    //   alert("Please fill in all fields");
+    //   return;
+    // }
+
     RootNavigation.navigate("Dashboard", {});
   }, []);
   return (

@@ -1,4 +1,4 @@
-import { Text, StyleSheet, View, SafeAreaView } from "react-native";
+import { Text, StyleSheet, View, SafeAreaView, ScrollView } from "react-native";
 
 import { Navbar } from "../../Navbar";
 import { createContext, useState } from "react";
@@ -25,27 +25,24 @@ export function Dashboard() {
       <windowContext.Provider value={{ windowContent, setWindowContent }}>
         <Navbar />
       </windowContext.Provider>
-      <View style={styles.container}>
-        <View>
-          {windowContent === "MyCourses" ? <MyCourses /> : <></>}
-          {windowContent === "Find" ? <Find /> : <></>}
-          {windowContent === "Notes" ? <Notes /> : <></>}
-          {windowContent === "Create" ? <Create /> : <></>}
-          {windowContent === "Files" ? <Files /> : <></>}
-          {windowContent === "Settings" ? <Settings /> : <></>}
-        </View>
-      </View>
+
+      <ScrollView contentContainerStyle={styles.container}>
+        {windowContent === "MyCourses" ? <MyCourses /> : <></>}
+        {windowContent === "Find" ? <Find /> : <></>}
+        {windowContent === "Notes" ? <Notes /> : <></>}
+        {windowContent === "Create" ? <Create /> : <></>}
+        {windowContent === "Files" ? <Files /> : <></>}
+        {windowContent === "Settings" ? <Settings /> : <></>}
+      </ScrollView>
     </>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    width: "100%",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    backgroundColor:
-      "linear-gradient( -45deg, rgba(229, 243, 255, 1) 0%,  rgba(247, 252, 255, 1) 100% )",
   },
 });

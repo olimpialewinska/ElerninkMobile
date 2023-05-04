@@ -17,7 +17,10 @@ export function Navbar() {
       {visible ? <MainMenu visible={visible} setVisible={setVisible} /> : <></>}
       <View style={styles.menu}>
         <Text style={styles.title}>Hi, Eryk!</Text>
-        <TouchableOpacity onPress={() => setVisible(!visible)}>
+        <TouchableOpacity
+          style={{ padding: 16, paddingRight: 0 }}
+          onPress={() => setVisible(!visible)}
+        >
           <Image
             style={styles.image}
             source={require("../../assets/menu.png")}

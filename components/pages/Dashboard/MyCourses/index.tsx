@@ -1,9 +1,21 @@
-import { Text } from "react-native/";
+import { Text, View, StyleSheet } from "react-native/";
+import { Course } from "./Course";
 
 export function MyCourses() {
   return (
-    <>
-      <Text> My Courses</Text>
-    </>
+    <View style={styles.container}>
+      <Course />
+      <Course />
+      <Course />
+      <Course />
+      <Course />
+      <Course />
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    marginTop: 20,
+  },
+});
