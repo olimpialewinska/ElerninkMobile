@@ -7,6 +7,8 @@ import {
   TextInput,
   View,
   Image,
+  TouchableOpacity,
+  Text,
 } from "react-native";
 import * as RootNavigation from "../../../RootNavigation";
 
@@ -32,9 +34,9 @@ export function Login() {
         <TextInput placeholder="email" style={styles.input} />
         <TextInput placeholder="password" style={styles.input} />
       </View>
-      <View style={styles.button}>
-        <Button title="Login" color={"white"} onPress={handleLogin} />
-      </View>
+      <TouchableOpacity style={styles.buttonBg} onPress={handleLogin}>
+        <Text style={styles.buttonText}>Log In</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
@@ -50,19 +52,19 @@ const styles = StyleSheet.create({
     backgroundColor:
       "linear-gradient( -45deg, rgba(229, 243, 255, 1) 0%,  rgba(247, 252, 255, 1) 100% )",
   },
-  button: {
+  buttonBg: {
     width: 300,
-    backgroundColor: "#5882a3",
-    margin: 10,
-    borderWidth: 0,
-    borderColor: "transparent",
-    color: "#fff",
-    padding: 16,
+    backgroundColor:
+      "linear-gradient(-45deg, rgba(185, 203, 255, 1) 0%, rgba(101, 157, 255, 1) 100% )",
+    padding: 20,
     borderRadius: 30,
-    fontSize: 14,
+    marginBottom: 10,
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: "bold",
     textAlign: "center",
     textTransform: "uppercase",
-    fontWeight: "bold",
   },
   image: {
     width: 250,
@@ -71,9 +73,10 @@ const styles = StyleSheet.create({
   input: {
     width: 300,
     height: 50,
-    margin: 12,
     borderWidth: 1,
     padding: 10,
-    borderRadius: 20,
+    borderRadius: 10,
+    borderColor: "rgba(0, 0, 0, 0.2)",
+    marginBottom: 20,
   },
 });

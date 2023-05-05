@@ -1,6 +1,13 @@
 import { useCallback } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Button, Image, StyleSheet, View } from "react-native";
+import {
+  Button,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Text,
+} from "react-native";
 import * as RootNavigation from "../../../RootNavigation";
 
 export function Start() {
@@ -19,16 +26,12 @@ export function Start() {
         source={require("../../../assets/logo1.png")}
       />
       <View>
-        <View style={styles.button}>
-          <Button title="Login" color={"white"} onPress={handleLoginPress} />
-        </View>
-        <View style={styles.button}>
-          <Button
-            title="Register"
-            color={"white"}
-            onPress={handleRegisterPress}
-          />
-        </View>
+        <TouchableOpacity style={styles.buttonBg} onPress={handleLoginPress}>
+          <Text style={styles.buttonText}>Log In</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.buttonBg}>
+          <Text style={styles.buttonText}>Register</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -45,22 +48,23 @@ const styles = StyleSheet.create({
     backgroundColor:
       "linear-gradient( -45deg, rgba(229, 243, 255, 1) 0%,  rgba(247, 252, 255, 1) 100% )",
   },
-  button: {
-    width: 300,
-    backgroundColor: "#5882a3",
-    margin: 10,
-    borderWidth: 0,
-    borderColor: "transparent",
-    color: "#fff",
-    padding: 16,
-    borderRadius: 30,
-    fontSize: 14,
-    textAlign: "center",
-    textTransform: "uppercase",
-    fontWeight: "bold",
-  },
+
   image: {
     width: 250,
     height: 150,
+  },
+  buttonBg: {
+    width: 300,
+    backgroundColor:
+      "linear-gradient(-45deg, rgba(185, 203, 255, 1) 0%, rgba(101, 157, 255, 1) 100% )",
+    padding: 20,
+    borderRadius: 30,
+    marginBottom: 20,
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
+    textTransform: "uppercase",
   },
 });

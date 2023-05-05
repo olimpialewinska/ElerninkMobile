@@ -38,11 +38,20 @@ export function MainMenu(props: {
       <TouchableOpacity
         onPress={() => {
           props.setVisible(false);
+          setWindowContent("Manage");
+        }}
+      >
+        <Text style={styles.text}>Manage</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          props.setVisible(false);
           setWindowContent("Files");
         }}
       >
         <Text style={styles.text}>Files</Text>
       </TouchableOpacity>
+
       <TouchableOpacity
         onPress={() => {
           props.setVisible(false);

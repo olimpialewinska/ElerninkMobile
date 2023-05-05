@@ -8,6 +8,7 @@ import { Notes } from "./Notes";
 import { Create } from "./Create";
 import { Files } from "./Files";
 import { Settings } from "./Settings";
+import { Manage } from "./Manage";
 
 interface contextInterface {
   windowContent: string;
@@ -31,6 +32,7 @@ export function Dashboard() {
         {windowContent === "Find" ? <Find /> : <></>}
         {windowContent === "Notes" ? <Notes /> : <></>}
         {windowContent === "Create" ? <Create /> : <></>}
+        {windowContent === "Manage" ? <Manage /> : <></>}
         {windowContent === "Files" ? <Files /> : <></>}
         {windowContent === "Settings" ? <Settings /> : <></>}
       </ScrollView>
