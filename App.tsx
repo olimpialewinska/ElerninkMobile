@@ -7,11 +7,6 @@ import { Register } from "./components/pages/Register";
 import * as RootNavigation from "./RootNavigation";
 import { Start } from "./components/pages/Start";
 import { Dashboard } from "./components/pages/Dashboard";
-import { Create } from "./components/pages/Dashboard/Create";
-import { Files } from "./components/pages/Dashboard/Files";
-import { Find } from "./components/pages/Dashboard/Find";
-import { Notes } from "./components/pages/Dashboard/Notes";
-import { Settings } from "./components/pages/Dashboard/Settings";
 
 const Stack = createNativeStackNavigator();
 
@@ -27,11 +22,6 @@ export default function App() {
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="Dashboard" component={Dashboard} />
-        <Stack.Screen name="Create" component={Create} />
-        <Stack.Screen name="Files" component={Files} />
-        <Stack.Screen name="Find" component={Find} />
-        <Stack.Screen name="Notes" component={Notes} />
-        <Stack.Screen name="Settings" component={Settings} />
       </Stack.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>

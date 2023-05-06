@@ -5,12 +5,12 @@ interface CourseProps {
   course: ICourse;
 }
 
-export function Course(props: CourseProps) {
+export function CourseComponenet(props: CourseProps) {
   return (
     <>
       <View style={style.container}>
         <Image
-          style={style.courseImage}
+          style={style.image}
           source={{
             uri: props.course.image,
           }}
@@ -52,7 +52,7 @@ const style = StyleSheet.create({
     fontWeight: "400",
     color: "rgba(0, 0, 0, 0.6)",
   },
-  courseImage: {
+  image: {
     width: "100%",
     height: "100%",
   },

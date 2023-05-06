@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import {
   Text,
   StyleSheet,
@@ -7,8 +7,48 @@ import {
   Image,
   TextInput,
 } from "react-native";
+import { userContext } from "..";
+import { ICourse } from "../../../../types";
+import { CourseComponenet } from "./Course";
 
 export function Find() {
+  const { auth } = useContext(userContext);
+  const [search, setSearch] = useState("");
+  const [courses, setCourses] = useState<any>();
+  const getCourses = useCallback(async () => {
+    const response = await fetch(
+      `https://elernink.vercel.app/api/courses/findCourse`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: auth.id,
+        }),
+      }
+    );
+    const data = await response.json();
+    setCourses(data);
+  }, [auth.id]);
+
+  const filterList = useCallback(
+    (search: string) => {
+      if (search != "") {
+        const filteredList = courses.filter((course: ICourse) => {
+          return course.name.toLowerCase().includes(search.toLowerCase());
+        });
+        setCourses(filteredList);
+      } else {
+        getCourses();
+      }
+    },
+    [courses, getCourses]
+  );
+
+  useEffect(() => {
+    getCourses();
+  }, [getCourses]);
   return (
     <>
       <Text style={styles.title}>Find Course</Text>
@@ -22,13 +62,30 @@ export function Find() {
           style={styles.searchInput}
           placeholder="Search"
           placeholderTextColor={"#002542"}
+          value={search}
+          onChangeText={(text) => {
+            filterList(text);
+            setSearch(text);
+          }}
         />
+      </View>
+      <View style={styles.container}>
+        {courses?.map((course: ICourse) => {
+          return <CourseComponenet key={course.id} course={course} />;
+        })}
       </View>
     </>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    marginTop: 20,
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
   title: {
     fontSize: 24,
     fontWeight: "bold",

@@ -6,8 +6,13 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
+import { FileInterface } from "../../../../../types";
 
-export function FileItem() {
+interface FileItemProps {
+  file: FileInterface;
+  deleteFile: (id: string) => void;
+}
+export function FileItem(props: FileItemProps) {
   return (
     <View style={styles.fileItem}>
       <View style={styles.wrapper}>
@@ -15,7 +20,7 @@ export function FileItem() {
           source={require("../../../../../assets/file.png")}
           style={styles.fileIcon}
         />
-        <Text style={styles.fileName}>File Name</Text>
+        <Text style={styles.fileName}>{props.file.name}</Text>
       </View>
 
       <View style={styles.wrapper}>

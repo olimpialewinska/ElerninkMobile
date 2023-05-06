@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import {
   Text,
   StyleSheet,
@@ -8,8 +8,108 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { NoteItem } from "./NoteItem";
+import { userContext } from "..";
+import { NoteInterface } from "../../../../types";
+
+const sort = (noteList: NoteInterface[], type: "asc" | "desc") => {
+  const sortedNotes = noteList
+    ?.slice()
+    .sort((a: NoteInterface, b: NoteInterface) => {
+      if (type === "asc") {
+        if (a.name < b.name) {
+          return -1;
+        }
+        if (a.name > b.name) {
+          return 1;
+        }
+      } else {
+        if (a.name > b.name) {
+          return -1;
+        }
+        if (a.name < b.name) {
+          return 1;
+        }
+      }
+      return 0;
+    });
+  return sortedNotes;
+};
 
 export function Notes() {
+  const { auth } = useContext(userContext);
+  const [notes, setNotes] = useState<NoteInterface[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [show, setShow] = useState(false);
+  const [search, setSearch] = useState("");
+  const handleClose = () => setShow(false);
+  const handleShow = () => {
+    setShow(true);
+  };
+  const [select, setSelect] = useState(true);
+
+  const sortNotesAZ = useCallback(() => {
+    const sortedNotes = notes
+      ?.slice()
+      .sort((a: NoteInterface, b: NoteInterface) => {
+        if (a.name > b.name) {
+          return 1;
+        }
+        if (a.name < b.name) {
+          return -1;
+        }
+        return 0;
+      });
+    setNotes(sortedNotes);
+  }, [notes]);
+
+  const sortNotes = useCallback(() => {
+    const sortedNotes = sort(notes, select ? "asc" : "desc");
+    setNotes(sortedNotes);
+  }, [notes, select]);
+
+  const getNotes = useCallback(async () => {
+    setLoading(true);
+    const data = await fetch(`https://elernink.vercel.app/api/notes/getNotes`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8",
+      },
+      body: JSON.stringify({
+        userId: auth.id,
+      }),
+    });
+    if (data.status !== 200) {
+      return;
+    }
+    const notes = await data.json();
+    setNotes(notes.data);
+    setLoading(false);
+  }, [auth.id]);
+
+  const searchByName = useCallback(
+    (name: string) => {
+      if (name != "") {
+        const filteredList = notes?.filter((note: NoteInterface) => {
+          return note.name.toLowerCase().includes(name.toLowerCase());
+        });
+        setNotes(filteredList);
+      } else {
+        getNotes();
+      }
+    },
+    [getNotes, notes]
+  );
+
+  const deleteNote = useCallback(
+    (id: string) => {
+      const newNotes = notes?.filter((note: NoteInterface) => note.id !== id);
+      setNotes(newNotes);
+    },
+    [notes]
+  );
+  useEffect(() => {
+    getNotes();
+  }, [getNotes]);
   return (
     <>
       <Text style={styles.title}>My Notes</Text>
@@ -31,26 +131,28 @@ export function Notes() {
           <Text style={styles.addButtonText}>+ Add Note</Text>
         </TouchableOpacity>
         <View style={styles.wrapper}>
-          <TouchableOpacity style={styles.iconBg}>
+          <TouchableOpacity
+            style={styles.iconBg}
+            onPress={() => {
+              setSelect(!select);
+              sortNotes();
+            }}
+          >
             <Image
-              source={require("../../../../assets/AZ.png")}
-              style={styles.icon}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.iconBg}>
-            <Image
-              source={require("../../../../assets/ZA.png")}
+              source={
+                select
+                  ? require("../../../../assets/ZA.png")
+                  : require("../../../../assets/AZ.png")
+              }
               style={styles.icon}
             />
           </TouchableOpacity>
         </View>
       </View>
       <View style={styles.fContainer}>
-        <NoteItem />
-        <NoteItem />
-        <NoteItem />
-        <NoteItem />
-        <NoteItem />
+        {notes?.map((note: NoteInterface) => {
+          return <NoteItem key={note.id} note={note} deleteNote={deleteNote} />;
+        })}
       </View>
     </>
   );

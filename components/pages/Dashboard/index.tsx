@@ -15,27 +15,42 @@ interface contextInterface {
   setWindowContent: (value: string) => void;
 }
 
+interface userInterface {
+  auth: {
+    id: string;
+    email: string;
+  };
+}
+
 export const windowContext = createContext<contextInterface>(
   {} as contextInterface
 );
 
+export const userContext = createContext<userInterface>({} as userInterface);
+
 export function Dashboard() {
-  const [windowContent, setWindowContent] = useState("MyCourses");
+  const [windowContent, setWindowContent] = useState("My Courses");
+  const user = {
+    id: "6d0b3462-2d06-4398-93b0-0479e456bff2",
+    email: "olim1003@gmail.com",
+  };
   return (
     <>
-      <windowContext.Provider value={{ windowContent, setWindowContent }}>
-        <Navbar />
-      </windowContext.Provider>
+      <userContext.Provider value={{ auth: user }}>
+        <windowContext.Provider value={{ windowContent, setWindowContent }}>
+          <Navbar />
+        </windowContext.Provider>
 
-      <ScrollView contentContainerStyle={styles.container}>
-        {windowContent === "MyCourses" ? <MyCourses /> : <></>}
-        {windowContent === "Find" ? <Find /> : <></>}
-        {windowContent === "Notes" ? <Notes /> : <></>}
-        {windowContent === "Create" ? <Create /> : <></>}
-        {windowContent === "Manage" ? <Manage /> : <></>}
-        {windowContent === "Files" ? <Files /> : <></>}
-        {windowContent === "Settings" ? <Settings /> : <></>}
-      </ScrollView>
+        <ScrollView contentContainerStyle={styles.container}>
+          {windowContent === "Find" ? <Find /> : <></>}
+          {windowContent === "Notes" ? <Notes /> : <></>}
+          {windowContent === "Create" ? <Create /> : <></>}
+          {windowContent === "Manage" ? <Manage /> : <></>}
+          {windowContent === "Files" ? <Files /> : <></>}
+          {windowContent === "Settings" ? <Settings /> : <></>}
+          {windowContent === "My Courses" ? <MyCourses /> : <></>}
+        </ScrollView>
+      </userContext.Provider>
     </>
   );
 }

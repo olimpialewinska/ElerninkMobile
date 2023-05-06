@@ -6,8 +6,13 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
+import { NoteInterface } from "../../../../../types";
 
-export function NoteItem() {
+interface NoteItemProps {
+  note: NoteInterface;
+  deleteNote: (id: string) => void;
+}
+export function NoteItem(props: NoteItemProps) {
   return (
     <View style={styles.noteItem}>
       <View style={styles.wrapper}>
@@ -15,7 +20,7 @@ export function NoteItem() {
           source={require("../../../../../assets/file.png")}
           style={styles.noteIcon}
         />
-        <Text style={styles.noteName}>Note Name</Text>
+        <Text style={styles.noteName}>{props.note.name}</Text>
       </View>
 
       <View style={styles.wrapper}>

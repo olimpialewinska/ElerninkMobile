@@ -6,18 +6,47 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
+import { ICourse } from "../../../../../types";
+import { useCallback } from "react";
 
-export function Course() {
+interface ICourseComponent {
+  course: ICourse;
+  courseList: ICourse[];
+  deleteCourse: (id: string) => void;
+}
+export function Course(props: ICourseComponent) {
+  const handleDelete = useCallback(async () => {
+    const data = await fetch("https://elernink.vercel.app/api/courses/delete", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: props.course.id,
+      }),
+    });
+
+    const response = data.status;
+
+    if (response === 200) {
+      props.deleteCourse(props.course.id);
+    }
+  }, [props]);
   return (
     <>
       <View style={style.container}>
+        <Image
+          style={style.courseImage}
+          source={{
+            uri: props.course.image,
+          }}
+        />
         <View style={style.wrapper}>
-          <Text style={style.header}>Course</Text>
+          <Text style={style.header}>{props.course.name}</Text>
           <Text style={style.description}>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea
-            accusantium at aspernatur eos optio assumenda, nisi eaque, quo
-            blanditiis minima hic. Ad sint rem animi, quod maxime ipsa cum
-            similique!
+            {props.course.description.length > 100
+              ? props.course.description.slice(0, 100) + "..."
+              : props.course.description}
           </Text>
           <View style={style.buttonsContainer}>
             <TouchableOpacity>
@@ -32,7 +61,11 @@ export function Course() {
                 style={style.image}
               />
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                handleDelete();
+              }}
+            >
               <Image
                 source={require("../../../../../assets/delete.png")}
                 style={style.image}
@@ -85,5 +118,11 @@ const style = StyleSheet.create({
     width: "100%",
     paddingHorizontal: 20,
     marginTop: 16,
+    position: "absolute",
+    bottom: 14,
+  },
+  courseImage: {
+    width: "100%",
+    height: "100%",
   },
 });

@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Text, StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import {
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 export function Settings() {
   return (
@@ -15,6 +21,10 @@ export function Settings() {
       <TextInput placeholder="Name" style={styles.input} />
       <TouchableOpacity style={styles.buttonBg}>
         <Text style={styles.buttonText}>Update password</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.signOutBtnBg}>
+        <Text style={styles.buttonText}>Sign out</Text>
       </TouchableOpacity>
     </>
   );
@@ -58,5 +68,15 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     textTransform: "uppercase",
+  },
+  signOutBtnBg: {
+    width: "90%",
+    backgroundColor:
+      "linear-gradient(-45deg, rgba(185, 203, 255, 1) 0%, rgba(101, 157, 255, 1) 100% )",
+    padding: 18,
+    borderRadius: 30,
+    marginBottom: 10,
+    position: "absolute",
+    bottom: -160,
   },
 });

@@ -1,22 +1,21 @@
-import { useState } from "react";
-import {
-  SafeAreaView,
-  Text,
-  StyleSheet,
-  View,
-  Image,
-  ScrollView,
-  TouchableOpacity,
-} from "react-native";
+import { useCallback, useContext, useState } from "react";
+import { Text, StyleSheet, View, Image, TouchableOpacity } from "react-native";
 import { MainMenu } from "../Menu";
+import { userContext } from "../pages/Dashboard";
 
 export function Navbar() {
   const [visible, setVisible] = useState(false);
+  const { auth } = useContext(userContext);
+
+  const getName = useCallback(() => {
+    const index = auth.email.indexOf("@");
+    return auth.email.slice(0, index);
+  }, [auth.email]);
   return (
     <View style={styles.container}>
       {visible ? <MainMenu visible={visible} setVisible={setVisible} /> : <></>}
       <View style={styles.menu}>
-        <Text style={styles.title}>Hi, Eryk!</Text>
+        <Text style={styles.title}>Hi, {getName()}!</Text>
         <TouchableOpacity
           style={{ padding: 16, paddingRight: 0 }}
           onPress={() => setVisible(!visible)}

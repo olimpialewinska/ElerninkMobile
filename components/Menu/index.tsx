@@ -3,11 +3,28 @@ import React, { useContext } from "react";
 import * as RootNavigation from "../../RootNavigation";
 import { windowContext } from "../pages/Dashboard";
 
+interface MenuItemProps {
+  setVisible: (value: boolean) => void;
+  text: string;
+}
+function MenuItem({ setVisible, text }: MenuItemProps) {
+  const { setWindowContent } = useContext(windowContext);
+  return (
+    <TouchableOpacity
+      onPress={() => {
+        setVisible(false);
+        setWindowContent(text);
+      }}
+    >
+      <Text style={styles.text}>{text}</Text>
+    </TouchableOpacity>
+  );
+}
+
 export function MainMenu(props: {
   setVisible: (arg0: boolean) => void;
   visible: any;
 }) {
-  const { setWindowContent } = useContext(windowContext);
   return (
     <View style={styles.container}>
       <View style={styles.menu}>
@@ -19,63 +36,13 @@ export function MainMenu(props: {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity
-        onPress={() => {
-          props.setVisible(false);
-          setWindowContent("MyCourses");
-        }}
-      >
-        <Text style={styles.text}>My Courses</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          props.setVisible(false);
-          setWindowContent("Create");
-        }}
-      >
-        <Text style={styles.text}>Create</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          props.setVisible(false);
-          setWindowContent("Manage");
-        }}
-      >
-        <Text style={styles.text}>Manage</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          props.setVisible(false);
-          setWindowContent("Files");
-        }}
-      >
-        <Text style={styles.text}>Files</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        onPress={() => {
-          props.setVisible(false);
-          setWindowContent("Find");
-        }}
-      >
-        <Text style={styles.text}>Find</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          props.setVisible(false);
-          setWindowContent("Notes");
-        }}
-      >
-        <Text style={styles.text}>Notes</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          props.setVisible(false);
-          setWindowContent("Settings");
-        }}
-      >
-        <Text style={styles.text}>Settings</Text>
-      </TouchableOpacity>
+      <MenuItem text="My Courses" setVisible={props.setVisible}></MenuItem>
+      <MenuItem text="Create" setVisible={props.setVisible}></MenuItem>
+      <MenuItem text="Manage" setVisible={props.setVisible}></MenuItem>
+      <MenuItem text="Files" setVisible={props.setVisible}></MenuItem>
+      <MenuItem text="Find" setVisible={props.setVisible}></MenuItem>
+      <MenuItem text="Notes" setVisible={props.setVisible}></MenuItem>
+      <MenuItem text="Settings" setVisible={props.setVisible}></MenuItem>
     </View>
   );
 }
