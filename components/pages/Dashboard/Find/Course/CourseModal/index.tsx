@@ -75,6 +75,12 @@ export function CourseModal(props: MyModalProps) {
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
+            <Pressable style={styles.close} onPress={props.hide}>
+              <Image
+                source={require("../../../../../../assets/close.png")}
+                style={{ width: 20, height: 20 }}
+              />
+            </Pressable>
             <Image
               style={{
                 width: 260,
@@ -114,31 +120,24 @@ export function CourseModal(props: MyModalProps) {
                   }}
                 />
                 <Pressable
-                  style={[styles.button, styles.buttonClose, { marginTop: 20 }]}
+                  style={[styles.buttonBg, { marginTop: 20 }]}
                   onPress={() => {
                     handleSubmit();
                   }}
                 >
-                  <Text style={styles.textStyle}>Join Course</Text>
+                  <Text style={styles.buttonText}>Join Course</Text>
                 </Pressable>
               </>
             ) : (
               <Pressable
-                style={[styles.button, styles.buttonClose, { marginTop: 20 }]}
+                style={[styles.buttonBg, { marginTop: 20 }]}
                 onPress={() => {
                   handleSignUp();
                 }}
               >
-                <Text style={styles.textStyle}>Join Course</Text>
+                <Text style={styles.buttonText}>Join Course</Text>
               </Pressable>
             )}
-
-            <Pressable
-              style={[styles.button, styles.buttonClose, { marginTop: 40 }]}
-              onPress={props.hide}
-            >
-              <Text style={styles.textStyle}>Close</Text>
-            </Pressable>
           </View>
         </View>
       </Modal>
@@ -170,17 +169,6 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  buttonOpen: {
-    backgroundColor: "#F194FF",
-  },
-  buttonClose: {
-    backgroundColor: "#2196F3",
-  },
   textStyle: {
     width: "90%",
     fontSize: 14,
@@ -201,5 +189,32 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: "rgba(0, 0, 0, 0.1)",
     marginBottom: 10,
+  },
+  close: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    padding: 5,
+    elevation: 2,
+    position: "absolute",
+    top: 5,
+    right: 5,
+  },
+  buttonBg: {
+    width: 200,
+    backgroundColor:
+      "linear-gradient(-45deg, rgba(185, 203, 255, 1) 0%, rgba(101, 157, 255, 1) 100% )",
+    padding: 14,
+    borderRadius: 30,
+    marginBottom: 10,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
+    textTransform: "uppercase",
   },
 });
