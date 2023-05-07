@@ -10,6 +10,7 @@ import {
 import { NoteItem } from "./NoteItem";
 import { userContext } from "..";
 import { NoteInterface } from "../../../../types";
+import { AddNoteModal } from "./AddNoteModal";
 
 const sort = (noteList: NoteInterface[], type: "asc" | "desc") => {
   const sortedNotes = noteList
@@ -39,13 +40,15 @@ export function Notes() {
   const { auth } = useContext(userContext);
   const [notes, setNotes] = useState<NoteInterface[]>([]);
   const [loading, setLoading] = useState(false);
-  const [show, setShow] = useState(false);
   const [search, setSearch] = useState("");
-  const handleClose = () => setShow(false);
-  const handleShow = () => {
-    setShow(true);
-  };
   const [select, setSelect] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
+  const hide = () => {
+    setModalVisible(false);
+  };
+  const handleShow = useCallback(() => {
+    setModalVisible(true);
+  }, []);
 
   const sortNotesAZ = useCallback(() => {
     const sortedNotes = notes
@@ -132,7 +135,12 @@ export function Notes() {
       </View>
 
       <View style={styles.bar}>
-        <TouchableOpacity style={styles.addButton}>
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => {
+            handleShow();
+          }}
+        >
           <Text style={styles.addButtonText}>+ Add Note</Text>
         </TouchableOpacity>
         <View style={styles.wrapper}>
@@ -159,6 +167,11 @@ export function Notes() {
           return <NoteItem key={note.id} note={note} deleteNote={deleteNote} />;
         })}
       </View>
+      <AddNoteModal
+        hide={hide}
+        handleShow={handleShow}
+        visible={modalVisible}
+      />
     </>
   );
 }

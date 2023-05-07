@@ -10,6 +10,7 @@ import {
 import { FileItem } from "./FileItem";
 import { FileInterface } from "../../../../types";
 import { userContext } from "..";
+import { AddFileModal } from "./AddFileModal";
 
 const sortFiles = (fileList: FileInterface[], type: "asc" | "desc") => {
   const sortedFiles = fileList
@@ -41,6 +42,14 @@ export function Files() {
   const [search, setSearch] = useState("");
 
   const [select, setSelect] = useState(true);
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const hide = () => {
+    setModalVisible(false);
+  };
+  const handleShow = useCallback(() => {
+    setModalVisible(true);
+  }, []);
 
   const getFiles = useCallback(async () => {
     const files = await fetch(
@@ -115,7 +124,7 @@ export function Files() {
       </View>
 
       <View style={styles.bar}>
-        <TouchableOpacity style={styles.addButton}>
+        <TouchableOpacity style={styles.addButton} onPress={handleShow}>
           <Text style={styles.addButtonText}>+ Add Files</Text>
         </TouchableOpacity>
         <View style={styles.wrapper}>
@@ -142,6 +151,11 @@ export function Files() {
           <FileItem key={file.id} file={file} deleteFile={deleteFile} />
         ))}
       </View>
+      <AddFileModal
+        hide={hide}
+        handleShow={handleShow}
+        visible={modalVisible}
+      />
     </>
   );
 }
