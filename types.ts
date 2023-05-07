@@ -25,3 +25,8 @@ export interface NoteInterface {
   value: string;
   userId: string;
 }
+
+export interface IParticipant {
+  userId: string;
+  user_name: string;
+}

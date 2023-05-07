@@ -123,6 +123,11 @@ export function Notes() {
           style={styles.searchInput}
           placeholder="Search"
           placeholderTextColor={"#002542"}
+          value={search}
+          onChangeText={(text) => {
+            setSearch(text);
+            searchByName(text);
+          }}
         />
       </View>
 

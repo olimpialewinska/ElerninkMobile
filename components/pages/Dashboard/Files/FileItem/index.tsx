@@ -7,12 +7,36 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { FileInterface } from "../../../../../types";
+import { useCallback, useContext } from "react";
+import { userContext } from "../..";
 
 interface FileItemProps {
   file: FileInterface;
   deleteFile: (id: string) => void;
 }
 export function FileItem(props: FileItemProps) {
+  const { auth } = useContext(userContext);
+  const handleDelete = useCallback(async () => {
+    const data = await fetch(
+      "https://elernink.vercel.app/api/files/deleteFile",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          fileName: props.file.name,
+          userId: auth.id,
+          id: props.file.id,
+        }),
+      }
+    );
+    if (data.status == 200) {
+      props.deleteFile(props.file.id);
+    } else {
+      alert("Something went wrong");
+    }
+  }, [auth.id, props]);
   return (
     <View style={styles.fileItem}>
       <View style={styles.wrapper}>
@@ -34,7 +58,7 @@ export function FileItem(props: FileItemProps) {
             style={styles.icon}
           />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleDelete}>
           <Image
             source={require("../../../../../assets/delete.png")}
             style={styles.icon}

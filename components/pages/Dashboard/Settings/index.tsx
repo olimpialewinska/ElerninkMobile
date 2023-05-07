@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import {
   Text,
   StyleSheet,
@@ -6,20 +6,128 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { userContext } from "..";
 
 export function Settings() {
+  const { auth } = useContext(userContext);
+  const [mail, setMail] = useState(auth.email);
+  const [password, setPassword] = useState("");
+
+  const [valid, setValid] = useState(true);
+  const [match, setMatch] = useState(true);
+
+  const [validationText, setValidationText] = useState("Change your email");
+  const [validationTextPass, setValidationTextPass] = useState(
+    "Change your password"
+  );
+
+  const emailValidation = useCallback(() => {
+    const expression = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{1,}$/i;
+    setValid(expression.test(mail));
+  }, [mail]);
+
+  const passwordMatch = useCallback(
+    (confirm: string) => {
+      password == confirm ? setMatch(true) : setMatch(false);
+    },
+    [password]
+  );
+
+  const updatePassword = useCallback(async () => {
+    const data = await fetch(
+      "https://elernink.vercel.app/api/auth/updateUser",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: auth.id,
+          value: password,
+          type: "password",
+        }),
+      }
+    );
+    const res = data.status;
+
+    if (res == 200) {
+      setValidationTextPass("Account updated successfully");
+    } else {
+      const message = await data.json();
+      setValidationTextPass(message.error);
+    }
+  }, [auth.id, password]);
+
+  const updateData = useCallback(async () => {
+    const data = await fetch(
+      "https://elernink.vercel.app/api/auth/updateUser",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: auth.id,
+          value: mail,
+          type: "email",
+        }),
+      }
+    );
+
+    const res = data.status;
+
+    if (res == 200) {
+      setValidationText("Account updated successfully");
+    } else {
+      const message = await data.json();
+      setValidationText(message.error);
+    }
+  }, [auth.id, mail]);
   return (
     <>
       <Text style={styles.title}>Settings</Text>
-      <Text style={styles.paragraph}>Change your email</Text>
-      <TextInput placeholder="Name" style={styles.input} />
-      <TouchableOpacity style={styles.buttonBg}>
+      <Text style={styles.paragraph}>
+        {!valid ? "Please enter a valid email" : validationText}
+      </Text>
+      <TextInput
+        placeholder="Name"
+        style={styles.input}
+        onChangeText={(text) => {
+          emailValidation();
+          setMail(text);
+        }}
+        value={mail}
+      />
+      <TouchableOpacity
+        style={styles.buttonBg}
+        onPress={() => {
+          updateData();
+        }}
+      >
         <Text style={styles.buttonText}>Update email</Text>
       </TouchableOpacity>
-      <Text style={styles.paragraph}>Change your password</Text>
-      <TextInput placeholder="Name" style={styles.input} />
-      <TextInput placeholder="Name" style={styles.input} />
-      <TouchableOpacity style={styles.buttonBg}>
+      <Text style={styles.paragraph}>
+        {!match ? "Passwords do not match" : validationTextPass}
+      </Text>
+      <TextInput
+        style={styles.input}
+        placeholder="New password"
+        value={password}
+        onChangeText={(text) => setPassword(text)}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Confirm new password"
+        onChangeText={(text) => {
+          passwordMatch(text);
+        }}
+      />
+      <TouchableOpacity
+        style={styles.buttonBg}
+        onPress={() => {
+          updatePassword();
+        }}
+      >
         <Text style={styles.buttonText}>Update password</Text>
       </TouchableOpacity>
 

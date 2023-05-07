@@ -7,12 +7,32 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { NoteInterface } from "../../../../../types";
+import { useCallback } from "react";
 
 interface NoteItemProps {
   note: NoteInterface;
   deleteNote: (id: string) => void;
 }
 export function NoteItem(props: NoteItemProps) {
+  const handleDelete = useCallback(async () => {
+    const data = await fetch(
+      `https://elernink.vercel.app/api/notes/deleteNote`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8",
+        },
+        body: JSON.stringify({
+          noteId: props.note.id,
+        }),
+      }
+    );
+    if (data.status !== 200) {
+      return;
+    }
+    props.deleteNote(props.note.id);
+  }, [props]);
+
   return (
     <View style={styles.noteItem}>
       <View style={styles.wrapper}>
@@ -30,11 +50,11 @@ export function NoteItem(props: NoteItemProps) {
           }}
         >
           <Image
-            source={require("../../../../../assets/download.png")}
+            source={require("../../../../../assets/expand.png")}
             style={styles.icon}
           />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleDelete}>
           <Image
             source={require("../../../../../assets/delete.png")}
             style={styles.icon}

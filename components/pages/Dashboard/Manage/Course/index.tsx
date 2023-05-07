@@ -7,7 +7,8 @@ import {
   Image,
 } from "react-native";
 import { ICourse } from "../../../../../types";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
+import { UserModal } from "./UserModal";
 
 interface ICourseComponent {
   course: ICourse;
@@ -15,6 +16,14 @@ interface ICourseComponent {
   deleteCourse: (id: string) => void;
 }
 export function Course(props: ICourseComponent) {
+  const [modalVisible, setModalVisible] = useState(false);
+  const hide = () => {
+    setModalVisible(false);
+  };
+  const handleShow = useCallback(() => {
+    setModalVisible(true);
+  }, []);
+
   const handleDelete = useCallback(async () => {
     const data = await fetch("https://elernink.vercel.app/api/courses/delete", {
       method: "POST",
@@ -49,7 +58,11 @@ export function Course(props: ICourseComponent) {
               : props.course.description}
           </Text>
           <View style={style.buttonsContainer}>
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                handleShow();
+              }}
+            >
               <Image
                 source={require("../../../../../assets/people.png")}
                 style={style.image}
@@ -74,6 +87,12 @@ export function Course(props: ICourseComponent) {
           </View>
         </View>
       </View>
+      <UserModal
+        hide={hide}
+        handleShow={handleShow}
+        visible={modalVisible}
+        course={props.course}
+      />
     </>
   );
 }
@@ -95,16 +114,22 @@ const style = StyleSheet.create({
     width: "100%",
     backgroundColor: "white",
     padding: 10,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
   },
   header: {
     fontSize: 16,
     fontWeight: "600",
     color: "#000",
+    alignSelf: "flex-start",
   },
   description: {
     fontSize: 14,
     fontWeight: "400",
     color: "rgba(0, 0, 0, 0.6)",
+    alignSelf: "flex-start",
   },
   image: {
     width: 24,

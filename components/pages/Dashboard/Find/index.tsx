@@ -71,7 +71,13 @@ export function Find() {
       </View>
       <View style={styles.container}>
         {courses?.map((course: ICourse) => {
-          return <CourseComponenet key={course.id} course={course} />;
+          return (
+            <CourseComponenet
+              key={course.id}
+              course={course}
+              getCourses={getCourses}
+            />
+          );
         })}
       </View>
     </>
