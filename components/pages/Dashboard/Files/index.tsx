@@ -155,6 +155,7 @@ export function Files() {
         hide={hide}
         handleShow={handleShow}
         visible={modalVisible}
+        getFiles={getFiles}
       />
     </>
   );

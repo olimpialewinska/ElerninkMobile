@@ -66,6 +66,7 @@ export function Dashboard() {
             {windowContent === "Files" ? <Files /> : <></>}
             {windowContent === "Settings" ? <Settings /> : <></>}
             {windowContent === "My Courses" ? <MyCourses /> : <></>}
+            {windowContent === "Course" ? <MyCourses /> : <></>}
           </ScrollView>
         </windowContext.Provider>
       </userContext.Provider>

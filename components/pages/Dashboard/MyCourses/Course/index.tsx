@@ -1,5 +1,6 @@
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { ICourse } from "../../../../../types";
+import * as RootNavigation from "../../../../../RootNavigation";
 
 interface CourseProps {
   course: ICourse;
@@ -8,7 +9,12 @@ interface CourseProps {
 export function Course(props: CourseProps) {
   return (
     <>
-      <View style={style.container}>
+      <TouchableOpacity
+        style={style.container}
+        onPress={() => {
+          RootNavigation.navigate("Course", { course: props.course });
+        }}
+      >
         <Image
           style={style.courseImage}
           source={{
@@ -19,7 +25,7 @@ export function Course(props: CourseProps) {
           <Text style={style.header}>{props.course.name}</Text>
           <Text style={style.description}>{props.course.description}</Text>
         </View>
-      </View>
+      </TouchableOpacity>
     </>
   );
 }
