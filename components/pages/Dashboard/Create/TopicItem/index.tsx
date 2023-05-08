@@ -9,8 +9,9 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import { TopicInterface } from "../../../../../types";
-import { listContext } from "..";
+
+import { TopicInterface, listContext } from "..";
+import DocumentPicker from "react-native-document-picker";
 
 interface TopicItemInterface {
   topic: TopicInterface;
@@ -22,7 +23,7 @@ export function TopicItem(props: TopicItemInterface) {
     useContext(listContext);
   const [lesson, setLesson] = useState(props.topic.lesson);
   const [topic, setTopic] = useState(props.topic.topic);
-  const [files, setFiles] = useState<File[]>([]);
+  const [files, setFiles] = useState<any>([]);
   const [error, setError] = useState(false);
 
   const deleteFile = useCallback(
@@ -51,8 +52,20 @@ export function TopicItem(props: TopicItemInterface) {
     [changeLesson, props.topic.id]
   );
 
+  const handleDocumentSelection = useCallback(async () => {
+    try {
+      const response = await DocumentPicker.pickMultiple({
+        presentationStyle: "fullScreen",
+      });
+      setFiles(response);
+      handleFileChange(response);
+    } catch (err) {
+      console.warn(err);
+    }
+  }, [props, files]);
+
   const handleFileChange = useCallback(
-    (newfiles: FileList | null) => {
+    (newfiles: any) => {
       setError(false);
       const newFiles = newfiles;
       if (!newFiles) return;
@@ -61,6 +74,7 @@ export function TopicItem(props: TopicItemInterface) {
     },
     [addFileList, files, props.topic.id]
   );
+
   return (
     <View style={styles.container}>
       <View style={styles.wrapper}>
@@ -82,6 +96,7 @@ export function TopicItem(props: TopicItemInterface) {
           />
         </TouchableOpacity>
       </View>
+
       <TextInput
         placeholder="Lesson"
         style={styles.dInput}
@@ -89,11 +104,17 @@ export function TopicItem(props: TopicItemInterface) {
         value={lesson}
         onChangeText={handleChangeLesson}
       />
-      <TouchableOpacity style={styles.tOpacity}>
+      <TouchableOpacity
+        style={styles.tOpacity}
+        onPress={handleDocumentSelection}
+      >
         <View style={styles.area}>
           <Text>Tap to add files</Text>
         </View>
       </TouchableOpacity>
+      {files?.map((file: any) => {
+        return <Text key={file.name}>{file.name}</Text>;
+      })}
     </View>
   );
 }

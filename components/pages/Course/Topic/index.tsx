@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { FileInterface, TopicInterface } from "../../../../types";
-import { Image, Text, View, StyleSheet } from "react-native";
+import { Image, Text, View, StyleSheet, Linking } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import RNFetchBlob from "rn-fetch-blob";
 
 interface TopicProps {
   topic: TopicInterface;
@@ -30,6 +31,9 @@ export function Topic(props: TopicProps) {
     const data = await response.json();
     setFiles(data.files);
   }, [props.courseId, props.topic.id]);
+  const hanldeOpen = useCallback((url: string) => {
+    Linking.openURL(url);
+  }, []);
 
   useEffect(() => {
     getFiles();
@@ -78,10 +82,16 @@ export function Topic(props: TopicProps) {
                     : file.name}
                 </Text>
               </View>
-              <Image
-                style={styles.icon}
-                source={require("../../../../assets/download.png")}
-              />
+              <TouchableOpacity
+                onPress={() => {
+                  hanldeOpen(file.url);
+                }}
+              >
+                <Image
+                  style={styles.icon}
+                  source={require("../../../../assets/download.png")}
+                />
+              </TouchableOpacity>
             </View>
           ))}
         </View>

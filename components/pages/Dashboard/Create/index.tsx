@@ -3,6 +3,7 @@ import {
   SetStateAction,
   createContext,
   useCallback,
+  useContext,
   useState,
 } from "react";
 import {
@@ -16,23 +17,34 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { TopicItem } from "./TopicItem";
-import { TopicInterface } from "../../../../types";
+import { launchImageLibrary } from "react-native-image-picker";
+import { userContext } from "..";
+import { DocumentPickerResponse } from "react-native-document-picker";
 
+export interface TopicInterface {
+  topic: string;
+  lesson: string;
+  order: number;
+  listOfFiles: DocumentPickerResponse[];
+  id: number;
+}
 interface listContextInterface {
   deleteItem: (index: number) => void;
   changeTopic: (index: number, topic: string) => void;
   changeLesson: (index: number, lesson: string) => void;
   list: TopicInterface[];
   setList: Dispatch<SetStateAction<TopicInterface[]>>;
-  addFileList: (index: number, file: File[]) => void;
+  addFileList: (index: number, file: DocumentPickerResponse[]) => void;
 }
 
 export const listContext = createContext({} as listContextInterface);
 
 export function Create() {
+  const { auth } = useContext(userContext);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [image, setImage] = useState<File>();
+  const [button, setButton] = useState("Create");
+  const [image, setImage] = useState<any>();
   const [code, setCode] = useState("");
   const [alert, setAlert] = useState("");
   const [list, setList] = useState<TopicInterface[]>([
@@ -44,6 +56,20 @@ export function Create() {
       listOfFiles: [],
     },
   ]);
+
+  const handleImagePick = useCallback(() => {
+    launchImageLibrary(
+      {
+        mediaType: "photo",
+        includeBase64: false,
+        maxHeight: 200,
+        maxWidth: 200,
+      },
+      (response) => {
+        setImage(response.assets![0]);
+      }
+    );
+  }, []);
 
   const addNewItem = useCallback(() => {
     setList((prev) => [
@@ -82,7 +108,7 @@ export function Create() {
   }, []);
 
   const addFileList = useCallback(
-    (index: number, file: File[]) => {
+    (index: number, file: DocumentPickerResponse[]) => {
       setList((prev) => {
         prev[index].listOfFiles = file;
         return [...prev];
@@ -91,12 +117,118 @@ export function Create() {
 
     []
   );
+  const handleCreate = useCallback(async () => {
+    setButton("Loading...");
+    if (name == "") {
+      setButton("Create");
+      return;
+    }
+    const response = await fetch(
+      "https://elernink.vercel.app/api/courses/createCourse",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          creator: auth.id,
+          name: name,
+          description: description,
+          code: code,
+          alert: alert,
+        }),
+      }
+    );
+
+    if (response.status !== 200) {
+      console.log(await response.json());
+      setButton("Create");
+      return;
+    }
+
+    const courseData = await response.json();
+
+    if (image) {
+      const formData = new FormData();
+      formData.append("courseId", courseData[0].id);
+      formData.append("image", image);
+
+      const response = await fetch(
+        "https://elernink.vercel.app/api/photos/addCoursePhoto",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      if (response.status !== 200) {
+        console.log("1", await response.json());
+        setButton("Create");
+        return;
+      }
+    }
+
+    for (const index in list) {
+      const topic = list[index].topic;
+      const lesson = list[index].lesson;
+      const order = list[index].order;
+      const listOfFiles = list[index].listOfFiles;
+
+      const response = await fetch(
+        "https://elernink.vercel.app/api/courses/createTopics",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            courseId: courseData[0].id,
+            topic: topic,
+            lesson: lesson,
+            order: order,
+          }),
+        }
+      );
+      if (response.status !== 200) {
+        setButton("Create");
+        console.log("2", await response.json());
+        return;
+      }
+
+      const TopicData = await response.json();
+
+      const formData = new FormData();
+      formData.append("topicId", TopicData.data[0].id);
+      formData.append("courseId", courseData[0].id);
+
+      for (const i in list[index].listOfFiles) {
+        formData.append("files", listOfFiles[i] as any);
+      }
+
+      const response2 = await fetch(
+        "https://elernink.vercel.app/api/courses/addCourseFiles",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      if (response2.status !== 200) {
+        setButton("Create");
+        console.log("3", await response2.json());
+        return;
+      }
+    }
+    setButton("Created");
+  }, [alert, auth.id, code, description, image, list, name]);
 
   return (
     <>
-      <View style={styles.button}>
-        <Button title="Create" color={"black"} />
-      </View>
+      <TouchableOpacity onPress={handleCreate}>
+        <View style={styles.button}>
+          <Text>{button}</Text>
+        </View>
+      </TouchableOpacity>
       <View style={styles.formContainer}>
         <TextInput
           placeholder="Name"
@@ -109,7 +241,12 @@ export function Create() {
             style={styles.codeInput}
             onChangeText={(text) => setCode(text)}
           />
-          <TouchableOpacity style={styles.Ibutton}>
+          <TouchableOpacity
+            style={styles.Ibutton}
+            onPress={() => {
+              handleImagePick();
+            }}
+          >
             <Image
               style={styles.image}
               source={require("../../../../assets/add-image.png")}

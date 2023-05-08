@@ -45,7 +45,6 @@ export function Course({ navigation, route }: Props) {
 
     const response = await data.json();
     setData(response.data);
-
     setTopics(response.topics);
   }, [route]);
 
@@ -118,6 +117,7 @@ const styles = StyleSheet.create({
     backgroundColor:
       "linear-gradient(-45deg, rgba(185, 203, 255, 1) 0%, rgba(101, 157, 255, 1) 100% )",
     padding: 20,
+    marginBottom: 20,
   },
   image: {
     width: "80%",
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255, 106, 106, 0.42)",
     padding: 10,
     borderRadius: 10,
-    marginVertical: 20,
+    marginBottom: 20,
     alignSelf: "center",
   },
 });
