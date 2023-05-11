@@ -9,8 +9,9 @@ import {
   ScrollView,
   View,
   TouchableOpacity,
+  TextInput,
 } from "react-native";
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { TopicInterface } from "../../../types";
 import { Topic } from "./Topic";
 import { NewItemModal } from "./Topic/NewItemModal";
@@ -24,6 +25,12 @@ export function CourseEdit({ navigation, route }: Props) {
   const [data, setData] = useState<any>();
   const [topics, setTopics] = useState<any>();
   const [modalVisible, setModalVisible] = useState(false);
+  const [name, setName] = useState(route.params.course?.name);
+  const [description, setDescription] = useState(
+    route.params.course?.description
+  );
+  const [alert, setAlert] = useState(route.params.course?.alert);
+
   const hide = () => {
     setModalVisible(false);
   };
@@ -52,7 +59,7 @@ export function CourseEdit({ navigation, route }: Props) {
     const response = await data.json();
     setData(response.data);
     setTopics(response.topics);
-  }, [route]);
+  }, [navigation, route.params.course?.id]);
 
   const deleteTopic = useCallback(
     (id: number) => {
@@ -63,10 +70,42 @@ export function CourseEdit({ navigation, route }: Props) {
     },
     [topics]
   );
+  const updateCourse = useCallback(
+    async (type: string) => {
+      const data = await fetch(
+        `https://elernink.vercel.app/api/courses/updateCourse`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: route.params.course?.id,
+            value:
+              type === "name"
+                ? name
+                : type === "description"
+                ? description
+                : alert,
+            type: type,
+          }),
+        }
+      );
+
+      if (data.status !== 200) {
+        const d = await data.json();
+        console.log(d);
+        return;
+      }
+      getCourseData();
+    },
+    [alert, description, getCourseData, name, route.params.course?.id]
+  );
 
   useEffect(() => {
+    console.log(route.params.course?.id);
     getCourseData();
-  }, [getCourseData]);
+  }, [getCourseData, route.params.course?.id]);
   return (
     <SafeAreaView style={styles.safe}>
       <ScrollView style={{ width: "100%" }}>
@@ -93,21 +132,40 @@ export function CourseEdit({ navigation, route }: Props) {
             <></>
           )}
 
-          <Text style={styles.name}> {route.params.course?.name} </Text>
-          <Text style={styles.description}>
-            {" "}
-            {route.params.course?.description}{" "}
-          </Text>
+          <TextInput
+            placeholder="Name"
+            style={styles.input}
+            value={name}
+            onChangeText={(text) => setName(text)}
+            onEndEditing={() => {
+              updateCourse("name");
+            }}
+          />
+          <TextInput
+            placeholder="Description"
+            style={[styles.input, { height: 160 }]}
+            multiline
+            numberOfLines={4}
+            value={description}
+            onEndEditing={() => {
+              updateCourse("description");
+            }}
+            onChangeText={(text) => setDescription(text)}
+          />
         </View>
-        {data?.[0].alert === "" ? (
-          <></>
-        ) : (
-          <View style={styles.alert}>
-            <Text style={{ fontSize: 18, fontWeight: "600" }}>
-              {data?.[0].alert}
-            </Text>
-          </View>
-        )}
+
+        <View style={styles.alert}>
+          <TextInput
+            placeholder="Alert"
+            style={[styles.input, { marginBottom: 0 }]}
+            value={alert}
+            onChangeText={(text) => setAlert(text)}
+            onEndEditing={() => {
+              updateCourse("alert");
+            }}
+          />
+        </View>
+
         {topics?.map((topic: TopicInterface) => (
           <Topic
             key={topic.id}
@@ -123,6 +181,9 @@ export function CourseEdit({ navigation, route }: Props) {
           visible={modalVisible}
           handleShow={handleShow}
           hide={hide}
+          courseId={route.params.course?.id}
+          order={topics?.length}
+          getCourseData={getCourseData}
         />
       </ScrollView>
     </SafeAreaView>
@@ -135,6 +196,16 @@ const styles = StyleSheet.create({
     flex: 1,
     display: "flex",
     alignItems: "center",
+  },
+  input: {
+    width: "90%",
+    height: 50,
+    borderWidth: 1,
+    padding: 10,
+    borderRadius: 10,
+    borderColor: "rgba(0, 0, 0, 0.1)",
+    marginBottom: 20,
+    alignSelf: "center",
   },
 
   navbar: {

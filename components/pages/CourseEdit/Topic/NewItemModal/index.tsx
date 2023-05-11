@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import {
   Modal,
@@ -16,9 +16,15 @@ interface MyModalProps {
   handleShow: () => void;
   hide: () => void;
   visible: boolean;
+  courseId: string | undefined;
+  order: number;
+  getCourseData: () => Promise<void>;
 }
 export function NewItemModal(props: MyModalProps) {
   const [files, setFiles] = useState<any>([]);
+  const [lesson, setLesson] = useState("");
+  const [topic, setTopic] = useState("");
+  const [button, setButton] = useState("Create Topic");
 
   const handleDocumentSelection = useCallback(async () => {
     try {
@@ -38,6 +44,58 @@ export function NewItemModal(props: MyModalProps) {
     },
     [files]
   );
+  useEffect(() => {
+    console.log(props.courseId);
+  });
+
+  const handleSave = useCallback(async () => {
+    setButton("Saving...");
+    const response = await fetch(
+      "https://elernink.vercel.app/api/courses/createTopics",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          courseId: props.courseId,
+          topic: topic,
+          lesson: lesson,
+          order: props.order + 1,
+        }),
+      }
+    );
+    if (response.status !== 200) {
+      setButton("Create");
+      return;
+    }
+    const TopicData = await response.json();
+
+    const formData = new FormData();
+    formData.append("topicId", TopicData.data[0].id);
+    formData.append("courseId", props.courseId as string);
+
+    for (const item in files) {
+      formData.append("file", files[item]);
+    }
+
+    const fileRes = await fetch(
+      "https://elernink.vercel.app/api/courses/addCourseFiles",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+    if (fileRes.status !== 200) {
+      setButton("Create Topic");
+      setFiles([]);
+      return;
+    }
+    setButton("Create Topic");
+    props.getCourseData();
+    setFiles([]);
+    props.hide();
+  }, [files, lesson, props, topic]);
 
   return (
     <View style={styles.centeredView}>
@@ -61,15 +119,15 @@ export function NewItemModal(props: MyModalProps) {
               placeholder="Topic"
               style={styles.input}
               onChangeText={(text) => {
-                // setName(text);
+                setTopic(text);
               }}
             />
             <TextInput
               placeholder="Lesson"
               style={styles.dInput}
               multiline={true}
-              onChangeText={() => {
-                // setDescription(text);
+              onChangeText={(text) => {
+                setLesson(text);
               }}
             />
 
@@ -121,10 +179,10 @@ export function NewItemModal(props: MyModalProps) {
             <TouchableOpacity
               style={[styles.buttonBg, { marginTop: 20 }]}
               onPress={() => {
-                // handleFileChange();
+                handleSave();
               }}
             >
-              <Text style={styles.buttonText}>Create Topic</Text>
+              <Text style={styles.buttonText}>{button}</Text>
             </TouchableOpacity>
           </View>
         </View>

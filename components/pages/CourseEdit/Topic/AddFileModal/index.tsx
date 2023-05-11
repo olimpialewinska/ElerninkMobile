@@ -24,6 +24,7 @@ interface MyModalProps {
 }
 export function AddFileModal(props: MyModalProps) {
   const [fileResponse, setFileResponse] = useState<any>([]);
+  const [button, setButton] = useState("Add files");
 
   const handleDocumentSelection = useCallback(async () => {
     try {
@@ -48,6 +49,7 @@ export function AddFileModal(props: MyModalProps) {
 
   const handleFileChange = useCallback(async () => {
     props.setLoading(true);
+    setButton("Loading...");
 
     const formData = new FormData();
     formData.append("topicId", props.topic.id.toString());
@@ -71,11 +73,13 @@ export function AddFileModal(props: MyModalProps) {
     if (fileRes.status !== 200) {
       const error = await fileRes.json();
       console.log(error);
+      setButton("Add Files");
       return;
     }
 
     setFileResponse([]);
     props.getFiles();
+    setButton("Add files");
     props.hide();
   }, [fileResponse, props]);
 
@@ -129,7 +133,7 @@ export function AddFileModal(props: MyModalProps) {
                   handleFileChange();
                 }}
               >
-                <Text style={styles.buttonText}>Add Files</Text>
+                <Text style={styles.buttonText}>{button}</Text>
               </TouchableOpacity>
             ) : (
               <></>

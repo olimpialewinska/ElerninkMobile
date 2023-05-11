@@ -3,8 +3,10 @@ import { Course } from "./Course";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { userContext } from "..";
 import { ICourse } from "../../../../types";
+import { useIsFocused } from "@react-navigation/native";
 
 export function Manage() {
+  const isFocused = useIsFocused();
   const { auth } = useContext(userContext);
   const [courses, setCourses] = useState<ICourse[]>([]);
   const [loading, setLoading] = useState(false);
@@ -38,8 +40,8 @@ export function Manage() {
   );
 
   useEffect(() => {
-    getCourses();
-  }, [getCourses]);
+    isFocused && getCourses();
+  }, [getCourses, isFocused]);
   return (
     <>
       <Text style={styles.title}>Manage Courses</Text>

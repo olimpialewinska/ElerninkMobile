@@ -11,6 +11,7 @@ export interface ICourse {
   description: string;
   code: string;
   image: string;
+  alert: string;
 }
 
 export interface FileInterface {

@@ -255,8 +255,10 @@ export function Create() {
         </View>
         <TextInput
           placeholder="Description"
-          style={styles.input}
           onChangeText={(text) => setDescription(text)}
+          style={[styles.input, { height: 160 }]}
+          multiline
+          numberOfLines={4}
         />
         <TextInput
           placeholder="Alert (optional)"

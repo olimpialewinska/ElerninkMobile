@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Linking,
   ActivityIndicator,
+  TextInput,
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import RNFetchBlob from "rn-fetch-blob";
@@ -28,8 +29,8 @@ export function Topic(props: TopicProps) {
     setModalVisible(true);
   }, []);
 
-  const [lesson, setLesson] = useState("");
-  const [topic, setTopic] = useState("");
+  const [lesson, setLesson] = useState(props.topic.lesson);
+  const [topic, setTopic] = useState(props.topic.topic);
   const [loading, setLoading] = useState(true);
 
   const getFiles = useCallback(async () => {
@@ -57,45 +58,28 @@ export function Topic(props: TopicProps) {
     getFiles();
   }, [getFiles]);
 
-  const updateTopic = useCallback(async () => {
-    const data = await fetch(
-      `https://elernink.vercel.app/api/courses/updateTopic`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: props.topic.id,
-          value: topic,
-          type: "topic",
-        }),
+  const updateTopic = useCallback(
+    async (type: string) => {
+      const data = await fetch(
+        `https://elernink.vercel.app/api/courses/updateTopic`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: props.topic.id,
+            value: type === "lesson" ? lesson : topic,
+            type: type,
+          }),
+        }
+      );
+
+      if (data.status !== 200) {
       }
-    );
-
-    if (data.status !== 200) {
-    }
-  }, [props.topic.id, topic]);
-
-  const updateLesson = useCallback(async () => {
-    const data = await fetch(
-      `https://elernink.vercel.app/api/courses/updateTopic`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: props.topic.id,
-          value: lesson,
-          type: "lesson",
-        }),
-      }
-    );
-
-    if (data.status !== 200) {
-    }
-  }, [props.topic.id, lesson]);
+    },
+    [props.topic.id, lesson, topic]
+  );
 
   const deleteTopic = useCallback(async () => {
     const data = await fetch(
@@ -114,7 +98,7 @@ export function Topic(props: TopicProps) {
     if (data.status === 200) {
       props.deleteTopic(props.topic.id);
     }
-  }, [props.topic.id]);
+  }, [props]);
 
   const deleteFile = useCallback(
     async (filename: string) => {
@@ -145,9 +129,15 @@ export function Topic(props: TopicProps) {
   return (
     <View style={styles.bg}>
       <View style={styles.topicWrapper}>
-        <Text style={{ fontSize: 16, fontWeight: "600" }}>
-          {props.topic.topic}
-        </Text>
+        <TextInput
+          placeholder="Topic"
+          style={styles.input}
+          value={topic}
+          onChangeText={(text) => setTopic(text)}
+          onEndEditing={() => {
+            updateTopic("topic");
+          }}
+        />
         <TouchableOpacity
           onPress={() => {
             deleteTopic();
@@ -161,17 +151,20 @@ export function Topic(props: TopicProps) {
       </View>
 
       <View style={styles.content}>
-        <Text
-          style={{
-            fontSize: 14,
-            textAlign: "justify",
-            marginBottom: 20,
-            marginTop: 18,
-            alignSelf: "flex-start",
+        <TextInput
+          placeholder="Lesson"
+          style={[
+            styles.input,
+            { height: 160, width: "100%", marginVertical: 20 },
+          ]}
+          multiline
+          numberOfLines={4}
+          value={lesson}
+          onEndEditing={() => {
+            updateTopic("lesson");
           }}
-        >
-          {props.topic.lesson}
-        </Text>
+          onChangeText={(text) => setLesson(text)}
+        />
 
         {files.map((file: FileInterface) => (
           <View style={styles.container} key={file.id}>
@@ -227,6 +220,15 @@ const styles = StyleSheet.create({
     width: "100%",
     display: "flex",
     alignItems: "center",
+  },
+  input: {
+    width: "90%",
+    height: 50,
+    borderWidth: 1,
+    padding: 10,
+    borderRadius: 10,
+    borderColor: "rgba(0, 0, 0, 0.1)",
+    alignSelf: "center",
   },
   topicWrapper: {
     width: "90%",
