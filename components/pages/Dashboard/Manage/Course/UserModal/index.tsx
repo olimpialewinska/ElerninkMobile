@@ -1,16 +1,8 @@
-import React, {
-  Key,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { ICourse, IParticipant } from "../../../../../../types";
 import {
   Alert,
   Modal,
-  TouchableOpacity,
   View,
   Text,
   Pressable,
@@ -18,7 +10,7 @@ import {
   TextInput,
   Image,
 } from "react-native";
-import { windowContext } from "../../..";
+
 import { Participant } from "./Participant";
 
 interface MyModalProps {

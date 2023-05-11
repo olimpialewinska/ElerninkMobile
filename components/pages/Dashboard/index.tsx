@@ -1,11 +1,4 @@
-import {
-  Text,
-  StyleSheet,
-  View,
-  SafeAreaView,
-  ScrollView,
-  Dimensions,
-} from "react-native";
+import { StyleSheet, ScrollView, Dimensions } from "react-native";
 
 import { Navbar } from "../../Navbar";
 import { createContext, useState } from "react";

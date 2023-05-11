@@ -1,11 +1,4 @@
-import {
-  Text,
-  StyleSheet,
-  View,
-  TextInput,
-  Image,
-  TouchableOpacity,
-} from "react-native";
+import { Text, StyleSheet, View, Image, TouchableOpacity } from "react-native";
 import { FileInterface } from "../../../../../types";
 import { useCallback, useContext } from "react";
 import { userContext } from "../..";

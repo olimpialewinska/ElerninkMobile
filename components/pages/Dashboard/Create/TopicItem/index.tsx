@@ -4,8 +4,6 @@ import {
   Image,
   StyleSheet,
   View,
-  SafeAreaView,
-  Button,
   TextInput,
   TouchableOpacity,
 } from "react-native";
@@ -112,9 +110,44 @@ export function TopicItem(props: TopicItemInterface) {
           <Text>Tap to add files</Text>
         </View>
       </TouchableOpacity>
-      {files?.map((file: any) => {
-        return <Text key={file.name}>{file.name}</Text>;
-      })}
+      <View style={{ marginTop: 20, width: "100%" }}>
+        {files?.map((file: any, index: Key) => {
+          return (
+            <View style={styles.centeredView} key={file.name}>
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <Image
+                  source={require("../../../../../assets/file.png")}
+                  style={{ width: 20, height: 20, marginRight: 10 }}
+                />
+
+                <Text>
+                  {file.name.length > 50
+                    ? file.name.substring(0, 50) + "..."
+                    : file.name}
+                </Text>
+              </View>
+
+              <TouchableOpacity
+                onPress={() => {
+                  deleteFile(index);
+                }}
+              >
+                <Image
+                  source={require("../../../../../assets/delete.png")}
+                  style={{ width: 20, height: 20 }}
+                />
+              </TouchableOpacity>
+            </View>
+          );
+        })}
+      </View>
     </View>
   );
 }
@@ -191,5 +224,16 @@ const styles = StyleSheet.create({
     borderColor: "rgba(0, 0, 0, 0.1)",
     marginBottom: 20,
     flex: 1,
+  },
+  centeredView: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 10,
+    backgroundColor: "rgba(0,0,0,0.1)",
+    borderRadius: 10,
+    padding: 10,
   },
 });

@@ -4,7 +4,8 @@ interface ModalFileItemProps {
   file: {
     name: string;
   };
-  deleteFile: (name: string) => void;
+  deleteFile: (index: number) => void;
+  index: number;
 }
 
 export function ModalFileItem(props: ModalFileItemProps) {
@@ -30,7 +31,7 @@ export function ModalFileItem(props: ModalFileItemProps) {
         </Text>
       </View>
 
-      <TouchableOpacity onPress={() => props.deleteFile(props.file.name)}>
+      <TouchableOpacity onPress={() => props.deleteFile(props.index)}>
         <Image
           source={require("../../../../../../assets/delete.png")}
           style={{ width: 20, height: 20 }}

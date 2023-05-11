@@ -1,23 +1,6 @@
-import React, {
-  Key,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React from "react";
 
-import {
-  Alert,
-  Modal,
-  TouchableOpacity,
-  View,
-  Text,
-  Pressable,
-  StyleSheet,
-  TextInput,
-  Image,
-} from "react-native";
+import { Modal, View, Pressable, StyleSheet, Image } from "react-native";
 
 interface MyModalProps {
   handleShow: () => void;

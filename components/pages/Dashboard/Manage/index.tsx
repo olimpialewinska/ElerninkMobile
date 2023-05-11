@@ -8,7 +8,6 @@ export function Manage() {
   const { auth } = useContext(userContext);
   const [courses, setCourses] = useState<ICourse[]>([]);
   const [loading, setLoading] = useState(false);
-  const [show, setShow] = useState(false);
 
   const getCourses = useCallback(async () => {
     setLoading(true);

@@ -1,23 +1,35 @@
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../../../App";
 import {
   SafeAreaView,
   Text,
   StyleSheet,
-  View,
   Image,
   Pressable,
   ScrollView,
+  View,
+  TouchableOpacity,
 } from "react-native";
-import { TopicInterface } from "../../../types";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useCallback, useEffect, useState } from "react";
+import { TopicInterface } from "../../../types";
 import { Topic } from "./Topic";
-import { RootStackParamList } from "../../../App";
+import { NewItemModal } from "./Topic/NewItemModal";
 
-type Props = NativeStackScreenProps<RootStackParamList, "Course", "MyStack">;
-
-export function Course({ navigation, route }: Props) {
+type Props = NativeStackScreenProps<
+  RootStackParamList,
+  "CourseEdit",
+  "MyStack"
+>;
+export function CourseEdit({ navigation, route }: Props) {
   const [data, setData] = useState<any>();
   const [topics, setTopics] = useState<any>();
+  const [modalVisible, setModalVisible] = useState(false);
+  const hide = () => {
+    setModalVisible(false);
+  };
+  const handleShow = useCallback(() => {
+    setModalVisible(true);
+  }, []);
 
   const getCourseData = useCallback(async () => {
     const data = await fetch(
@@ -40,7 +52,17 @@ export function Course({ navigation, route }: Props) {
     const response = await data.json();
     setData(response.data);
     setTopics(response.topics);
-  }, [navigation, route.params.course?.id]);
+  }, [route]);
+
+  const deleteTopic = useCallback(
+    (id: number) => {
+      const newTopics = topics.filter(
+        (topic: TopicInterface) => topic.id !== id
+      );
+      setTopics(newTopics);
+    },
+    [topics]
+  );
 
   useEffect(() => {
     getCourseData();
@@ -91,8 +113,17 @@ export function Course({ navigation, route }: Props) {
             key={topic.id}
             topic={topic}
             courseId={route.params.course?.id}
+            deleteTopic={deleteTopic}
           />
         ))}
+        <TouchableOpacity style={styles.buttonBg} onPress={handleShow}>
+          <Text style={styles.buttonText}>+</Text>
+        </TouchableOpacity>
+        <NewItemModal
+          visible={modalVisible}
+          handleShow={handleShow}
+          hide={hide}
+        />
       </ScrollView>
     </SafeAreaView>
   );
@@ -150,5 +181,23 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 20,
     alignSelf: "center",
+  },
+  buttonBg: {
+    alignSelf: "center",
+    width: 50,
+    backgroundColor:
+      "linear-gradient(-45deg, rgba(185, 203, 255, 1) 0%, rgba(101, 157, 255, 1) 100% )",
+    padding: 14,
+    borderRadius: 25,
+    marginBottom: 10,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
+    textTransform: "uppercase",
   },
 });

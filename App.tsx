@@ -7,8 +7,14 @@ import { Register } from "./components/pages/Register";
 import * as RootNavigation from "./RootNavigation";
 import { Start } from "./components/pages/Start";
 import { Dashboard } from "./components/pages/Dashboard";
-import { Course, RootStackParamList } from "./components/pages/Course";
+import { Course } from "./components/pages/Course";
 import { createStackNavigator } from "@react-navigation/stack";
+import { ICourse } from "./types";
+import { CourseEdit } from "./components/pages/CourseEdit";
+export type RootStackParamList = {
+  Course: { course: ICourse | undefined };
+  CourseEdit: { course: ICourse | undefined };
+};
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
@@ -29,6 +35,12 @@ export default function App() {
         <RootStack.Screen
           name="Course"
           component={Course}
+          options={{ title: "Course" }}
+          initialParams={{ course: undefined }}
+        />
+        <RootStack.Screen
+          name="CourseEdit"
+          component={CourseEdit}
           options={{ title: "Course" }}
           initialParams={{ course: undefined }}
         />

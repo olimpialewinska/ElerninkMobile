@@ -1,11 +1,4 @@
-import {
-  Text,
-  StyleSheet,
-  View,
-  TextInput,
-  Image,
-  TouchableOpacity,
-} from "react-native";
+import { Text, StyleSheet, View, Image, TouchableOpacity } from "react-native";
 import { NoteInterface } from "../../../../../types";
 import { useCallback } from "react";
 

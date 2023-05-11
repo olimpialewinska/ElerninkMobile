@@ -1,14 +1,8 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Touchable,
-  TouchableOpacity,
-  Image,
-} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { ICourse } from "../../../../../types";
 import { useCallback, useState } from "react";
 import { UserModal } from "./UserModal";
+import * as RootNavigation from "../../../../../RootNavigation";
 
 interface ICourseComponent {
   course: ICourse;
@@ -68,7 +62,11 @@ export function Course(props: ICourseComponent) {
                 style={style.image}
               />
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                RootNavigation.navigate("CourseEdit", { course: props.course });
+              }}
+            >
               <Image
                 source={require("../../../../../assets/edit.png")}
                 style={style.image}
@@ -110,13 +108,12 @@ const style = StyleSheet.create({
     borderRadius: 12,
   },
   wrapper: {
-    height: "60%",
+    height: "50%",
     width: "100%",
     backgroundColor: "white",
     padding: 10,
     display: "flex",
     flexDirection: "column",
-    justifyContent: "center",
     alignItems: "center",
   },
   header: {

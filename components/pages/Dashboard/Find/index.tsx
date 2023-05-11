@@ -1,12 +1,5 @@
 import { useCallback, useContext, useEffect, useState } from "react";
-import {
-  Text,
-  StyleSheet,
-  View,
-  SafeAreaView,
-  Image,
-  TextInput,
-} from "react-native";
+import { Text, StyleSheet, View, Image, TextInput } from "react-native";
 import { userContext } from "..";
 import { ICourse } from "../../../../types";
 import { CourseComponenet } from "./Course";

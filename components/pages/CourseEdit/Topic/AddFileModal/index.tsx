@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from "react";
+import React, { Dispatch, SetStateAction, useCallback, useState } from "react";
 
 import {
   Modal,
@@ -9,68 +9,75 @@ import {
   StyleSheet,
   Image,
 } from "react-native";
-import DocumentPicker, {
-  DocumentPickerResponse,
-} from "react-native-document-picker";
+import DocumentPicker from "react-native-document-picker";
 import { ModalFileItem } from "./ModalFileItem";
-import { userContext } from "../..";
+import { TopicInterface } from "../../../../../types";
 
 interface MyModalProps {
   handleShow: () => void;
   hide: () => void;
   visible: boolean;
   getFiles: () => void;
+  topic: TopicInterface;
+  setLoading: Dispatch<SetStateAction<boolean>>;
+  courseId: string | string[] | undefined;
 }
 export function AddFileModal(props: MyModalProps) {
-  const { auth } = useContext(userContext);
   const [fileResponse, setFileResponse] = useState<any>([]);
 
   const handleDocumentSelection = useCallback(async () => {
-    const response = await DocumentPicker.pickMultiple({
-      presentationStyle: "fullScreen",
-    });
-    console.log("response", response);
-    setFileResponse(response);
-    console.log("fileR", fileResponse);
-  }, [fileResponse]);
-
-  const handleUpload = useCallback(async () => {
-    if (!fileResponse) {
-      return;
+    try {
+      const response = await DocumentPicker.pickMultiple({
+        presentationStyle: "fullScreen",
+      });
+      setFileResponse(response);
+    } catch (err) {
+      console.warn(err);
     }
-    const formData = new FormData();
-    formData.append("userId", auth.id);
-
-    fileResponse.forEach((file: any) => {
-      formData.append("files", file);
-    });
-    console.log(formData);
-    const data = await fetch("https://elernink.vercel.app/api/files/upload", {
-      method: "POST",
-      body: formData,
-    });
-
-    if (data.status === 200) {
-      props.getFiles();
-      props.hide();
-      setFileResponse([]);
-      return;
-    }
-
-    setFileResponse([]);
-  }, [auth.id, fileResponse, props]);
+  }, []);
 
   const deleteFile = useCallback(
-    (name: string) => {
-      console.log("before", fileResponse);
+    (index: number) => {
       const newFiles = fileResponse.filter(
-        (file: DocumentPickerResponse) => file.name !== name
+        (file: any, i: number) => i !== index
       );
-      console.log("after", newFiles);
       setFileResponse(newFiles);
     },
     [fileResponse]
   );
+
+  const handleFileChange = useCallback(async () => {
+    props.setLoading(true);
+
+    const formData = new FormData();
+    formData.append("topicId", props.topic.id.toString());
+    if (props.courseId) {
+      formData.append("courseId", props.courseId as string);
+    }
+
+    for (let i = 0; i < fileResponse.length; i++) {
+      const file = fileResponse[i];
+      formData.append("file", file);
+    }
+
+    const fileRes = await fetch(
+      "https://elernink.vercel.app/api/courses/addCourseFiles",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    if (fileRes.status !== 200) {
+      const error = await fileRes.json();
+      console.log(error);
+      return;
+    }
+
+    setFileResponse([]);
+    props.getFiles();
+    props.hide();
+  }, [fileResponse, props]);
 
   return (
     <View style={styles.centeredView}>
@@ -99,18 +106,28 @@ export function AddFileModal(props: MyModalProps) {
             </TouchableOpacity>
 
             <View style={styles.fileColumn}>
-              {fileResponse.map((file: { name: string }) => (
-                <ModalFileItem
-                  key={file.name}
-                  file={file}
-                  deleteFile={deleteFile}
-                />
-              ))}
+              {fileResponse.map(
+                (
+                  file: {
+                    name: string;
+                  },
+                  index: number
+                ) => (
+                  <ModalFileItem
+                    key={index.toString()}
+                    file={file}
+                    index={index}
+                    deleteFile={deleteFile}
+                  />
+                )
+              )}
             </View>
             {fileResponse.length > 0 ? (
               <TouchableOpacity
                 style={[styles.buttonBg]}
-                onPress={handleUpload}
+                onPress={() => {
+                  handleFileChange();
+                }}
               >
                 <Text style={styles.buttonText}>Add Files</Text>
               </TouchableOpacity>

@@ -18,7 +18,7 @@ import {
 } from "react-native";
 import { TopicItem } from "./TopicItem";
 import { launchImageLibrary } from "react-native-image-picker";
-import { userContext } from "..";
+import { userContext, windowContext } from "..";
 import { DocumentPickerResponse } from "react-native-document-picker";
 
 export interface TopicInterface {
@@ -40,6 +40,7 @@ interface listContextInterface {
 export const listContext = createContext({} as listContextInterface);
 
 export function Create() {
+  const { setWindowContent } = useContext(windowContext);
   const { auth } = useContext(userContext);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -220,14 +221,13 @@ export function Create() {
       }
     }
     setButton("Created");
+    setWindowContent("Manage");
   }, [alert, auth.id, code, description, image, list, name]);
 
   return (
     <>
-      <TouchableOpacity onPress={handleCreate}>
-        <View style={styles.button}>
-          <Text>{button}</Text>
-        </View>
+      <TouchableOpacity onPress={handleCreate} style={styles.button}>
+        <Text style={{ fontSize: 16, fontWeight: "600" }}>{button}</Text>
       </TouchableOpacity>
       <View style={styles.formContainer}>
         <TextInput
@@ -296,9 +296,13 @@ const styles = StyleSheet.create({
     width: "90%",
     backgroundColor:
       "linear-gradient(-45deg, rgba(185, 203, 255, 1) 0%, rgba(101, 157, 255, 1) 100% )",
-    padding: 10,
+    padding: 20,
     borderRadius: 30,
     marginTop: 20,
+    alignSelf: "center",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
   input: {
     width: "90%",

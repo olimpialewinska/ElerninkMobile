@@ -1,16 +1,7 @@
-import React, {
-  Key,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { ICourse } from "../../../../../../types";
 import {
-  Alert,
   Modal,
-  TouchableOpacity,
   View,
   Text,
   Pressable,

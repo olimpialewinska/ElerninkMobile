@@ -1,11 +1,5 @@
 import { useCallback, useContext, useState } from "react";
-import {
-  Text,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Text, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import { userContext } from "..";
 
 export function Settings() {

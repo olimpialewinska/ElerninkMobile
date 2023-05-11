@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from "react";
 import { FileInterface, TopicInterface } from "../../../../types";
 import { Image, Text, View, StyleSheet, Linking } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import RNFetchBlob from "rn-fetch-blob";
 
 interface TopicProps {
   topic: TopicInterface;
@@ -70,7 +69,7 @@ export function Topic(props: TopicProps) {
             {props.topic.lesson}
           </Text>
           {files.map((file: FileInterface) => (
-            <View style={styles.container}>
+            <View style={styles.container} key={file.id}>
               <View style={styles.wrapper}>
                 <Image
                   style={[styles.icon, { marginRight: 8 }]}

@@ -39,8 +39,6 @@ const sortFiles = (fileList: FileInterface[], type: "asc" | "desc") => {
 export function Files() {
   const { auth } = useContext(userContext);
   const [files, setFiles] = useState<FileInterface[]>([]);
-  const [search, setSearch] = useState("");
-
   const [select, setSelect] = useState(true);
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -89,7 +87,9 @@ export function Files() {
 
   const deleteFile = useCallback(
     (id: string) => {
+      console.log(files);
       const newFiles = files?.filter((file: FileInterface) => file.id !== id);
+      console.log(newFiles);
       setFiles(newFiles);
     },
     [files]
