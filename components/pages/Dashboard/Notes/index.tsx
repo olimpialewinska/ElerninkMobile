@@ -11,6 +11,7 @@ import { NoteItem } from "./NoteItem";
 import { userContext } from "..";
 import { NoteInterface } from "../../../../types";
 import { AddNoteModal } from "./AddNoteModal";
+import { Loading } from "../../../Loading";
 
 const sort = (noteList: NoteInterface[], type: "asc" | "desc") => {
   const sortedNotes = noteList
@@ -148,6 +149,7 @@ export function Notes() {
         </View>
       </View>
       <View style={styles.fContainer}>
+        {loading ? <Loading /> : null}
         {notes?.map((note: NoteInterface) => {
           return <NoteItem key={note.id} note={note} deleteNote={deleteNote} />;
         })}

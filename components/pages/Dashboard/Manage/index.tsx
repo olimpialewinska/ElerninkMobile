@@ -4,6 +4,7 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { userContext } from "..";
 import { ICourse } from "../../../../types";
 import { useIsFocused } from "@react-navigation/native";
+import { Loading } from "../../../Loading";
 
 export function Manage() {
   const isFocused = useIsFocused();
@@ -46,6 +47,7 @@ export function Manage() {
     <>
       <Text style={styles.title}>Manage Courses</Text>
       <View style={styles.container}>
+        {loading ? <Loading /> : null}
         {courses?.map((course) => {
           return (
             <Course

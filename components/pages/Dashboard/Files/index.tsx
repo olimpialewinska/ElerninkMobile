@@ -11,6 +11,7 @@ import { FileItem } from "./FileItem";
 import { FileInterface } from "../../../../types";
 import { userContext } from "..";
 import { AddFileModal } from "./AddFileModal";
+import { Loading } from "../../../Loading";
 
 const sortFiles = (fileList: FileInterface[], type: "asc" | "desc") => {
   const sortedFiles = fileList
@@ -40,6 +41,7 @@ export function Files() {
   const { auth } = useContext(userContext);
   const [files, setFiles] = useState<FileInterface[]>([]);
   const [select, setSelect] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const [modalVisible, setModalVisible] = useState(false);
   const hide = () => {
@@ -50,6 +52,7 @@ export function Files() {
   }, []);
 
   const getFiles = useCallback(async () => {
+    setLoading(true);
     const files = await fetch(
       "https://elernink.vercel.app/api/files/getMyFiles",
       {
@@ -69,6 +72,7 @@ export function Files() {
 
     const data = await files.json();
     setFiles(data.files);
+    setLoading(false);
   }, [auth.id]);
 
   const searchByName = useCallback(
@@ -147,6 +151,7 @@ export function Files() {
         </View>
       </View>
       <View style={styles.fContainer}>
+        {loading ? <Loading /> : null}
         {files?.map((file: FileInterface) => (
           <FileItem key={file.id} file={file} deleteFile={deleteFile} />
         ))}

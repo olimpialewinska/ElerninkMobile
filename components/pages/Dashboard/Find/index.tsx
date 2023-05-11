@@ -3,12 +3,15 @@ import { Text, StyleSheet, View, Image, TextInput } from "react-native";
 import { userContext } from "..";
 import { ICourse } from "../../../../types";
 import { CourseComponenet } from "./Course";
+import { Loading } from "../../../Loading";
 
 export function Find() {
   const { auth } = useContext(userContext);
   const [search, setSearch] = useState("");
   const [courses, setCourses] = useState<any>();
+  const [loading, setLoading] = useState(false);
   const getCourses = useCallback(async () => {
+    setLoading(true);
     const response = await fetch(
       `https://elernink.vercel.app/api/courses/findCourse`,
       {
@@ -23,6 +26,7 @@ export function Find() {
     );
     const data = await response.json();
     setCourses(data);
+    setLoading(false);
   }, [auth.id]);
 
   const filterList = useCallback(
@@ -63,6 +67,7 @@ export function Find() {
         />
       </View>
       <View style={styles.container}>
+        {loading ? <Loading /> : null}
         {courses?.map((course: ICourse) => {
           return (
             <CourseComponenet

@@ -3,12 +3,15 @@ import { Course } from "./Course";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { ICourse } from "../../../../types";
 import { userContext } from "..";
+import { Loading } from "../../../Loading";
 
 export function MyCourses() {
   const { auth } = useContext(userContext);
   const [courses, setCourses] = useState<ICourse[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const getMyCourses = useCallback(async () => {
+    setLoading(true);
     const data = await fetch(
       `https://elernink.vercel.app/api/courses/dashboardCourses`,
       {
@@ -25,10 +28,10 @@ export function MyCourses() {
     if (data.status == 200) {
       const response = await data.json();
       setCourses(response);
-
+      setLoading(false);
       return;
     }
-  }, []);
+  }, [auth.id]);
 
   const filterList = useCallback(
     (search: string) => {
@@ -47,6 +50,7 @@ export function MyCourses() {
   useEffect(() => {
     getMyCourses();
   }, [getMyCourses]);
+
   return (
     <>
       <Text style={styles.title}>My Courses</Text>
@@ -63,7 +67,9 @@ export function MyCourses() {
           onChangeText={(text) => filterList(text)}
         />
       </View>
+
       <View style={styles.container}>
+        {loading ? <Loading /> : null}
         {courses?.map((course) => {
           return <Course key={course.id} course={course} />;
         })}
