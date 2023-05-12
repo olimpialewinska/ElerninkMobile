@@ -4,7 +4,6 @@ import { Navbar } from "../../Navbar";
 import { createContext, useState } from "react";
 import { MyCourses } from "./MyCourses";
 import { Find } from "./Find";
-import { Notes } from "./Notes";
 import { Create } from "./Create";
 import { Files } from "./Files";
 import { Settings } from "./Settings";
@@ -53,7 +52,7 @@ export function Dashboard() {
 
           <ScrollView contentContainerStyle={styles.container}>
             {windowContent === "Find" ? <Find /> : <></>}
-            {windowContent === "Notes" ? <Notes /> : <></>}
+
             {windowContent === "Create" ? <Create /> : <></>}
             {windowContent === "Manage" ? <Manage /> : <></>}
             {windowContent === "Files" ? <Files /> : <></>}

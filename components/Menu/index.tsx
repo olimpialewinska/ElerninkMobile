@@ -41,7 +41,6 @@ export function MainMenu(props: {
       <MenuItem text="Manage" setVisible={props.setVisible}></MenuItem>
       <MenuItem text="Files" setVisible={props.setVisible}></MenuItem>
       <MenuItem text="Find" setVisible={props.setVisible}></MenuItem>
-      <MenuItem text="Notes" setVisible={props.setVisible}></MenuItem>
       <MenuItem text="Settings" setVisible={props.setVisible}></MenuItem>
     </View>
   );
