@@ -44,9 +44,6 @@ export function NewItemModal(props: MyModalProps) {
     },
     [files]
   );
-  useEffect(() => {
-    console.log(props.courseId);
-  });
 
   const handleSave = useCallback(async () => {
     setButton("Saving...");

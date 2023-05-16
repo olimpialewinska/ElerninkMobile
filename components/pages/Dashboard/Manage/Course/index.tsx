@@ -2,7 +2,8 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { ICourse } from "../../../../../types";
 import { useCallback, useState } from "react";
 import { UserModal } from "./UserModal";
-import * as RootNavigation from "../../../../../RootNavigation";
+import { StackNavigation } from "../../../../../App";
+import { useNavigation } from "@react-navigation/native";
 
 interface ICourseComponent {
   course: ICourse;
@@ -10,6 +11,7 @@ interface ICourseComponent {
   deleteCourse: (id: string) => void;
 }
 export function Course(props: ICourseComponent) {
+  const navigation = useNavigation<StackNavigation>();
   const [modalVisible, setModalVisible] = useState(false);
   const hide = () => {
     setModalVisible(false);
@@ -64,7 +66,7 @@ export function Course(props: ICourseComponent) {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                RootNavigation.navigate("CourseEdit", { course: props.course });
+                navigation.navigate("CourseEdit", { course: props.course });
               }}
             >
               <Image

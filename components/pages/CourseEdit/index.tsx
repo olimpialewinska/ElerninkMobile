@@ -93,8 +93,6 @@ export function CourseEdit({ navigation, route }: Props) {
       );
 
       if (data.status !== 200) {
-        const d = await data.json();
-        console.log(d);
         return;
       }
       getCourseData();
@@ -103,7 +101,6 @@ export function CourseEdit({ navigation, route }: Props) {
   );
 
   useEffect(() => {
-    console.log(route.params.course?.id);
     getCourseData();
   }, [getCourseData, route.params.course?.id]);
   return (

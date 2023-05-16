@@ -47,6 +47,14 @@ export function MyCourses() {
     [courses, getMyCourses]
   );
 
+  const leave = useCallback(
+    (id: string) => {
+      const newList = courses.filter((course: ICourse) => course.id !== id);
+      setCourses(newList);
+    },
+    [courses]
+  );
+
   useEffect(() => {
     getMyCourses();
   }, [getMyCourses]);
@@ -71,7 +79,7 @@ export function MyCourses() {
       <View style={styles.container}>
         {loading ? <Loading /> : null}
         {courses?.map((course) => {
-          return <Course key={course.id} course={course} />;
+          return <Course key={course.id} course={course} leave={leave} />;
         })}
       </View>
     </>

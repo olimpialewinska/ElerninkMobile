@@ -1,6 +1,5 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import React, { useContext } from "react";
-import * as RootNavigation from "../../RootNavigation";
 import { windowContext } from "../pages/Dashboard";
 
 interface MenuItemProps {

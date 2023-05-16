@@ -142,7 +142,6 @@ export function Create() {
     );
 
     if (response.status !== 200) {
-      console.log(await response.json());
       setButton("Create");
       return;
     }
@@ -163,7 +162,6 @@ export function Create() {
       );
 
       if (response.status !== 200) {
-        console.log("1", await response.json());
         setButton("Create");
         return;
       }
@@ -192,7 +190,6 @@ export function Create() {
       );
       if (response.status !== 200) {
         setButton("Create");
-        console.log("2", await response.json());
         return;
       }
 
@@ -216,7 +213,6 @@ export function Create() {
 
       if (response2.status !== 200) {
         setButton("Create");
-        console.log("3", await response2.json());
         return;
       }
     }

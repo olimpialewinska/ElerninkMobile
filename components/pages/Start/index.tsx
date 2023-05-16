@@ -1,23 +1,16 @@
 import { useCallback } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import {
-  Button,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  Text,
-} from "react-native";
-import * as RootNavigation from "../../../RootNavigation";
+import { Image, StyleSheet, TouchableOpacity, View, Text } from "react-native";
+import { Props } from "../../../App";
 
-export function Start() {
+export function Start({ navigation }: Props) {
   const handleLoginPress = useCallback(() => {
-    RootNavigation.navigate("Login", {});
-  }, []);
+    navigation.navigate("Login");
+  }, [navigation]);
 
   const handleRegisterPress = useCallback(() => {
-    RootNavigation.navigate("Register", {});
-  }, []);
+    navigation.navigate("Register");
+  }, [navigation]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -29,7 +22,7 @@ export function Start() {
         <TouchableOpacity style={styles.buttonBg} onPress={handleLoginPress}>
           <Text style={styles.buttonText}>Log In</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.buttonBg}>
+        <TouchableOpacity style={styles.buttonBg} onPress={handleRegisterPress}>
           <Text style={styles.buttonText}>Register</Text>
         </TouchableOpacity>
       </View>

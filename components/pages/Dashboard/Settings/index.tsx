@@ -1,8 +1,12 @@
 import { useCallback, useContext, useState } from "react";
 import { Text, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import { userContext } from "..";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { setUserContext } from "../../../../App";
 
 export function Settings() {
+  const { setUser } = useContext(setUserContext);
+
   const { auth } = useContext(userContext);
   const [mail, setMail] = useState(auth.email);
   const [password, setPassword] = useState("");
@@ -77,6 +81,11 @@ export function Settings() {
       setValidationText(message.error);
     }
   }, [auth.id, mail]);
+
+  const handleLogOut = useCallback(() => {
+    AsyncStorage.removeItem("token");
+    setUser(undefined);
+  }, [setUser]);
   return (
     <>
       <Text style={styles.title}>Settings</Text>
@@ -125,7 +134,7 @@ export function Settings() {
         <Text style={styles.buttonText}>Update password</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.signOutBtnBg}>
+      <TouchableOpacity style={styles.signOutBtnBg} onPress={handleLogOut}>
         <Text style={styles.buttonText}>Sign out</Text>
       </TouchableOpacity>
     </>

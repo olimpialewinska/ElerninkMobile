@@ -91,9 +91,7 @@ export function Files() {
 
   const deleteFile = useCallback(
     (id: string) => {
-      console.log(files);
       const newFiles = files?.filter((file: FileInterface) => file.id !== id);
-      console.log(newFiles);
       setFiles(newFiles);
     },
     [files]

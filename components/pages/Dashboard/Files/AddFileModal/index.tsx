@@ -29,10 +29,8 @@ export function AddFileModal(props: MyModalProps) {
     const response = await DocumentPicker.pickMultiple({
       presentationStyle: "fullScreen",
     });
-    console.log("response", response);
     setFileResponse(response);
-    console.log("fileR", fileResponse);
-  }, [fileResponse]);
+  }, []);
 
   const handleUpload = useCallback(async () => {
     if (!fileResponse) {
@@ -44,7 +42,6 @@ export function AddFileModal(props: MyModalProps) {
     fileResponse.forEach((file: any) => {
       formData.append("files", file);
     });
-    console.log(formData);
     const data = await fetch("https://elernink.vercel.app/api/files/upload", {
       method: "POST",
       body: formData,
@@ -62,11 +59,9 @@ export function AddFileModal(props: MyModalProps) {
 
   const deleteFile = useCallback(
     (name: string) => {
-      console.log("before", fileResponse);
       const newFiles = fileResponse.filter(
         (file: DocumentPickerResponse) => file.name !== name
       );
-      console.log("after", newFiles);
       setFileResponse(newFiles);
     },
     [fileResponse]

@@ -1,7 +1,5 @@
-import { NavigationContainer } from "@react-navigation/native";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import {
-  Button,
   SafeAreaView,
   StyleSheet,
   TextInput,
@@ -10,20 +8,57 @@ import {
   TouchableOpacity,
   Text,
 } from "react-native";
-import * as RootNavigation from "../../../RootNavigation";
+import { setUserContext } from "../../../App";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Loading } from "../../Loading";
 
 export function Login() {
+  const { setUser } = useContext(setUserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = useCallback(() => {
-    // if (email === "" || password === "") {
-    //   alert("Please fill in all fields");
-    //   return;
-    // }
+  const handleLogin = useCallback(async () => {
+    if (email === "" || password === "") {
+      alert("Please fill in all fields");
+      return;
+    }
+    setLoading(true);
 
-    RootNavigation.navigate("Dashboard", {});
-  }, []);
+    const data = await fetch(`https://elernink.vercel.app/api/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
+
+    const response = await data.json();
+    setLoading(false);
+
+    if (data.status === 200) {
+      const token = response.user.id + "," + response.user.email;
+      AsyncStorage.setItem("token", token);
+      setUser({
+        id: response.user.id,
+        email: response.user.email,
+      });
+    } else {
+      alert(response);
+    }
+  }, [email, password, setUser]);
+
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <Loading />
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <Image
@@ -31,8 +66,18 @@ export function Login() {
         source={require("../../../assets/logo1.png")}
       />
       <View>
-        <TextInput placeholder="email" style={styles.input} />
-        <TextInput placeholder="password" style={styles.input} />
+        <TextInput
+          placeholder="email"
+          style={styles.input}
+          onChangeText={(text) => setEmail(text)}
+        />
+        <TextInput
+          placeholder="password"
+          style={styles.input}
+          onChangeText={(text) => setPassword(text)}
+          textContentType="password"
+          secureTextEntry={true}
+        />
       </View>
       <TouchableOpacity style={styles.buttonBg} onPress={handleLogin}>
         <Text style={styles.buttonText}>Log In</Text>

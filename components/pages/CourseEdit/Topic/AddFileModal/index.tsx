@@ -71,8 +71,6 @@ export function AddFileModal(props: MyModalProps) {
     );
 
     if (fileRes.status !== 200) {
-      const error = await fileRes.json();
-      console.log(error);
       setButton("Add Files");
       return;
     }

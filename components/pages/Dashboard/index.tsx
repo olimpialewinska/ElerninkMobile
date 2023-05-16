@@ -8,6 +8,8 @@ import { Create } from "./Create";
 import { Files } from "./Files";
 import { Settings } from "./Settings";
 import { Manage } from "./Manage";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../../../App";
 
 interface contextInterface {
   windowContent: string;
@@ -29,17 +31,22 @@ export const windowContext = createContext<contextInterface>(
 
 export const userContext = createContext<userInterface>({} as userInterface);
 
-export function Dashboard() {
+type Props = NativeStackScreenProps<RootStackParamList, "Dashboard", "MyStack">;
+
+export function Dashboard(props: Props) {
   const [windowContent, setWindowContent] = useState("My Courses");
-  const user = {
-    id: "6d0b3462-2d06-4398-93b0-0479e456bff2",
-    email: "olim1003@gmail.com",
-  };
   const screenHeight = Dimensions.get("window").height;
   const screenWidth = Dimensions.get("window").width;
+  const auth: userInterface = {
+    auth: {
+      id: props.route.params.id,
+      email: props.route.params.email,
+    },
+  };
+
   return (
     <>
-      <userContext.Provider value={{ auth: user }}>
+      <userContext.Provider value={{ auth: auth.auth }}>
         <windowContext.Provider
           value={{
             windowContent,
