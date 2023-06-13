@@ -149,10 +149,13 @@ export function Files() {
         </View>
       </View>
       <View style={styles.fContainer}>
-        {loading ? <Loading /> : null}
-        {files?.map((file: FileInterface) => (
-          <FileItem key={file.id} file={file} deleteFile={deleteFile} />
-        ))}
+        {loading ? (
+          <Loading />
+        ) : (
+          files?.map((file: FileInterface) => (
+            <FileItem key={file.id} file={file} deleteFile={deleteFile} />
+          ))
+        )}
       </View>
       <AddFileModal
         hide={hide}

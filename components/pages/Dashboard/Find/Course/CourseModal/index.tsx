@@ -78,6 +78,8 @@ export function CourseModal(props: MyModalProps) {
                 height: 160,
                 borderRadius: 10,
                 marginBottom: 20,
+                resizeMode: "cover",
+                justifyContent: "center",
               }}
               source={
                 props.course.image

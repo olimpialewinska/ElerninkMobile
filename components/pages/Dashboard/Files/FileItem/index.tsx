@@ -1,4 +1,11 @@
-import { Text, StyleSheet, View, Image, TouchableOpacity } from "react-native";
+import {
+  Text,
+  StyleSheet,
+  View,
+  Image,
+  TouchableOpacity,
+  Linking,
+} from "react-native";
 import { FileInterface } from "../../../../../types";
 import { useCallback, useContext } from "react";
 import { userContext } from "../..";
@@ -30,6 +37,9 @@ export function FileItem(props: FileItemProps) {
       alert("Something went wrong");
     }
   }, [auth.id, props]);
+  const hanldeOpen = useCallback((url: string) => {
+    Linking.openURL(url);
+  }, []);
   return (
     <View style={styles.fileItem}>
       <View style={styles.wrapper}>
@@ -44,6 +54,9 @@ export function FileItem(props: FileItemProps) {
         <TouchableOpacity
           style={{
             marginRight: 20,
+          }}
+          onPress={() => {
+            hanldeOpen(props.file.url);
           }}
         >
           <Image

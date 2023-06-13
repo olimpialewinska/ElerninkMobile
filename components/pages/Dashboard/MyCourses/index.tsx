@@ -77,10 +77,13 @@ export function MyCourses() {
       </View>
 
       <View style={styles.container}>
-        {loading ? <Loading /> : null}
-        {courses?.map((course) => {
-          return <Course key={course.id} course={course} leave={leave} />;
-        })}
+        {loading ? (
+          <Loading />
+        ) : (
+          courses?.map((course) => {
+            return <Course key={course.id} course={course} leave={leave} />;
+          })
+        )}
       </View>
     </>
   );

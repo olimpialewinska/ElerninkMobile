@@ -67,16 +67,19 @@ export function Find() {
         />
       </View>
       <View style={styles.container}>
-        {loading ? <Loading /> : null}
-        {courses?.map((course: ICourse) => {
-          return (
-            <CourseComponenet
-              key={course.id}
-              course={course}
-              getCourses={getCourses}
-            />
-          );
-        })}
+        {loading ? (
+          <Loading />
+        ) : (
+          courses?.map((course: ICourse) => {
+            return (
+              <CourseComponenet
+                key={course.id}
+                course={course}
+                getCourses={getCourses}
+              />
+            );
+          })
+        )}
       </View>
     </>
   );

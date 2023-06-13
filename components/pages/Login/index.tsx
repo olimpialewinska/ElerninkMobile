@@ -47,7 +47,7 @@ export function Login() {
         email: response.user.email,
       });
     } else {
-      alert(response);
+      alert("Invalid email or password");
     }
   }, [email, password, setUser]);
 

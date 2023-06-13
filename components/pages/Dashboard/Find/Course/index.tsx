@@ -80,6 +80,8 @@ const style = StyleSheet.create({
   },
   image: {
     width: "100%",
-    height: "100%",
+    height: "50%",
+    resizeMode: "cover",
+    justifyContent: "center",
   },
 });

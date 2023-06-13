@@ -16,7 +16,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "y"
+      "bundleIdentifier": "com.ElerninkMobile"
     },
     "android": {
       "adaptiveIcon": {
